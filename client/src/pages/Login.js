@@ -79,7 +79,8 @@ const Login = () => {
             <SparklesIcon className="h-10 w-10 text-white" />
           </div>
           <h2 className="mt-6 text-4xl font-extrabold bg-gradient-to-r from-indigo-700 to-violet-700 bg-clip-text text-transparent">
-            PlacePro
+            Placement Tariner
+    
           </h2>
           <p className="mt-2 text-slate-500 font-medium">Placement Portal</p>
         </div>
