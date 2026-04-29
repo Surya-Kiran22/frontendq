@@ -81,7 +81,7 @@ const Login = () => {
           <h2 className="mt-6 text-4xl font-extrabold bg-gradient-to-r from-indigo-700 to-violet-700 bg-clip-text text-transparent">
             PlacePro
           </h2>
-          <p className="mt-2 text-slate-500 font-medium">Campus Placement Portal</p>
+          <p className="mt-2 text-slate-500 font-medium">Placement Portal</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl shadow-slate-200/50 p-8 border border-slate-100">
@@ -183,7 +183,7 @@ const Login = () => {
                 <div className="flex justify-center space-x-4">
                   <div className="bg-gradient-to-br from-blue-50 to-cyan-50 px-4 py-3 rounded-xl border border-blue-100">
                     <p className="font-bold text-blue-700">Admin</p>
-                    <p className="font-mono text-blue-600 text-xs">77688 / surya77688</p>
+                    <p className="font-mono text-blue-600 text-xs">***** / surya*****</p>
                   </div>
                   <div className="bg-gradient-to-br from-emerald-50 to-teal-50 px-4 py-3 rounded-xl border border-emerald-100">
                     <p className="font-bold text-emerald-700">Student</p>
