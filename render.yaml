@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: frontendq
+    env: static
+    buildCommand: cd client && npm run build
+    publishDirectory: client/build
+    autoDeploy: true
