@@ -96,10 +96,15 @@ const mockCompanies = [
     name: 'Infosys',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.svg/1200px-Infosys_logo.svg.png',
     description: 'Infosys Limited is an Indian multinational information technology company that provides business consulting, information technology and outsourcing services.',
+    detailedDescription: 'Infosys is a global leader in next-generation digital services and consulting. With over 300,000 employees, it helps clients in more than 50 countries navigate their digital transformation. Infosys is known for its strong training programs, innovation-driven culture, and focus on sustainability.',
+    requirements: 'Strong programming skills in Java, Python, or C++. Good analytical and problem-solving abilities. Excellent communication skills and teamwork capabilities.',
+    importance: 'Infosys offers excellent career growth opportunities, global exposure, and comprehensive training programs. Being selected by Infosys provides a strong foundation for a career in IT services.',
     industry: 'IT Services',
     location: 'Bangalore, India',
     website: 'https://www.infosys.com',
     package: '6-10 LPA',
+    visitDate: '2025-07-20',
+    intake: 200,
     eligibility: {
       cgpa: 6.5,
       departments: ['CSE', 'ECE', 'EEE', 'IT', 'Mechanical'],
@@ -107,14 +112,33 @@ const mockCompanies = [
       backlogAllowed: false,
       skills: ['Python', 'Java', 'Aptitude']
     },
-    selectionProcess: {
-      rounds: [
-        { name: 'Online Assessment', description: 'Aptitude and technical' },
-        { name: 'Technical Interview', description: 'Coding and technical questions' },
-        { name: 'HR Interview', description: 'Behavioral questions' }
+    selectionProcess: [
+      { round: 'Online Assessment', description: 'Aptitude, logical reasoning, and verbal ability', duration: '90 minutes' },
+      { round: 'Coding Round', description: 'Programming test on data structures and algorithms', duration: '60 minutes' },
+      { round: 'Technical Interview', description: 'Technical discussion on projects and coding', duration: '45 minutes' },
+      { round: 'HR Interview', description: 'Behavioral and HR assessment', duration: '30 minutes' }
+    ],
+    roles: [
+      { title: 'Systems Engineer', department: 'IT Services', salaryPackage: '6-8 LPA' },
+      { title: 'Software Engineer', department: 'Development', salaryPackage: '7-9 LPA' },
+      { title: 'Digital Specialist Engineer', department: 'Digital', salaryPackage: '8-10 LPA' }
+    ],
+    requiredCourses: [
+      { name: 'Data Structures', platform: 'Coursera', url: '#' },
+      { name: 'Java Programming', platform: 'Udemy', url: '#' },
+      { name: 'Aptitude Preparation', platform: 'Fresherworld', url: '#' }
+    ],
+    preparationMaterial: {
+      practice: [
+        { title: 'Infosys Aptitude Practice', description: 'Quantitative and logical reasoning', difficulty: 'Medium', duration: '60 mins', type: 'Aptitude', resourceUrl: '#' },
+        { title: 'Coding Practice', description: 'Programming problems', difficulty: 'Hard', duration: '60 mins', type: 'Coding', resourceUrl: '#' }
+      ],
+      mockInterviews: [
+        { title: 'Mock Technical Interview', description: 'Technical interview simulation', type: 'Technical', duration: '45 mins' },
+        { title: 'Mock HR Interview', description: 'HR interview simulation', type: 'HR', duration: '30 mins' }
       ]
     },
-    interviewTips: 'Prepare well for puzzles and coding questions.',
+    interviewTips: 'Prepare well for puzzles, coding questions, and be ready to explain your projects clearly.',
     skills: ['Python', 'Java', 'C++', 'Problem Solving'],
     certifications: ['Infosys Certification'],
     isActive: true
@@ -175,10 +199,15 @@ const mockCompanies = [
     name: 'Accenture',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Accenture_logo.svg/1200px-Accenture_logo.svg.png',
     description: 'Accenture is a global professional services company with leading capabilities in digital, cloud and security.',
+    detailedDescription: 'Accenture is a Fortune Global 500 company with over 700,000 employees serving clients in more than 120 countries. It specializes in digital transformation, cloud services, and technology consulting. Accenture is known for its innovative approach, diverse workforce, and strong emphasis on continuous learning.',
+    requirements: 'Strong analytical and problem-solving skills. Good communication and interpersonal abilities. Knowledge of cloud technologies, data analytics, or digital technologies is preferred.',
+    importance: 'Accenture offers exposure to cutting-edge technologies, global projects, and excellent career development opportunities. It is a great place to build expertise in digital transformation and consulting.',
     industry: 'Consulting',
     location: 'Dublin, Ireland',
     website: 'https://www.accenture.com',
     package: '8-15 LPA',
+    visitDate: '2025-08-10',
+    intake: 100,
     eligibility: {
       cgpa: 7.0,
       departments: ['CSE', 'ECE', 'EEE', 'IT', 'Mechanical'],
@@ -186,14 +215,34 @@ const mockCompanies = [
       backlogAllowed: false,
       skills: ['Aptitude', 'Communication', 'Technical']
     },
-    selectionProcess: {
-      rounds: [
-        { name: 'Cognitive Assessment', description: 'Aptitude and reasoning' },
-        { name: 'Technical Assessment', description: 'Coding and technical' },
-        { name: 'Interview', description: 'Technical and HR' }
+    selectionProcess: [
+      { round: 'Cognitive Assessment', description: 'Aptitude, reasoning, and technical assessment', duration: '75 minutes' },
+      { round: 'Technical Assessment', description: 'Coding and technical skills evaluation', duration: '60 minutes' },
+      { round: 'Communication Round', description: 'Group discussion and verbal communication', duration: '30 minutes' },
+      { round: 'Technical Interview', description: 'Technical discussion and problem-solving', duration: '45 minutes' },
+      { round: 'HR Interview', description: 'Behavioral and cultural fit assessment', duration: '30 minutes' }
+    ],
+    roles: [
+      { title: 'Software Engineer', department: 'Technology', salaryPackage: '8-10 LPA' },
+      { title: 'Data Analyst', department: 'Analytics', salaryPackage: '10-12 LPA' },
+      { title: 'Cloud Consultant', department: 'Cloud', salaryPackage: '12-15 LPA' }
+    ],
+    requiredCourses: [
+      { name: 'Cloud Computing', platform: 'Coursera', url: '#' },
+      { name: 'Data Analytics', platform: 'Udemy', url: '#' },
+      { name: 'Communication Skills', platform: 'LinkedIn Learning', url: '#' }
+    ],
+    preparationMaterial: {
+      practice: [
+        { title: 'Cognitive Assessment Practice', description: 'Aptitude and reasoning', difficulty: 'Medium', duration: '75 mins', type: 'Aptitude', resourceUrl: '#' },
+        { title: 'Technical Assessment', description: 'Technical skills', difficulty: 'Hard', duration: '60 mins', type: 'Coding', resourceUrl: '#' }
+      ],
+      mockInterviews: [
+        { title: 'Mock Technical Interview', description: 'Technical interview simulation', type: 'Technical', duration: '45 mins' },
+        { title: 'Mock HR Interview', description: 'HR interview simulation', type: 'HR', duration: '30 mins' }
       ]
     },
-    interviewTips: 'Focus on problem-solving and communication skills.',
+    interviewTips: 'Focus on problem-solving, communication skills, and research about Accenture before the interview.',
     skills: ['Problem Solving', 'Communication', 'Technical'],
     certifications: ['Accenture Certification'],
     isActive: true
@@ -203,10 +252,15 @@ const mockCompanies = [
     name: 'Cognizant',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Cognizant_Logo.png/1200px-Cognizant_Logo.png',
     description: 'Cognizant is an American multinational technology company that provides business consulting, information technology and outsourcing services.',
+    detailedDescription: 'Cognizant is a multinational technology company with over 350,000 employees across the globe. It specializes in digital transformation, IT services, and consulting. Cognizant is known for its client-centric approach, innovation, and focus on emerging technologies.',
+    requirements: 'Strong programming skills in Java, Python, or JavaScript. Good understanding of data structures and algorithms. Excellent communication and teamwork skills.',
+    importance: 'Cognizant provides opportunities to work on diverse projects across industries, with strong training programs and career growth paths. It is an excellent platform for freshers to start their IT careers.',
     industry: 'IT Services',
     location: 'Teaneck, New Jersey',
     website: 'https://www.cognizant.com',
     package: '6-12 LPA',
+    visitDate: '2025-09-05',
+    intake: 180,
     eligibility: {
       cgpa: 6.5,
       departments: ['CSE', 'ECE', 'EEE', 'IT'],
@@ -214,14 +268,33 @@ const mockCompanies = [
       backlogAllowed: false,
       skills: ['Java', 'Python', 'Aptitude']
     },
-    selectionProcess: {
-      rounds: [
-        { name: 'Online Test', description: 'Aptitude and technical' },
-        { name: 'Technical Interview', description: 'Coding assessment' },
-        { name: 'HR Interview', description: 'Behavioral assessment' }
+    selectionProcess: [
+      { round: 'Online Test', description: 'Aptitude, technical, and coding assessment', duration: '90 minutes' },
+      { round: 'Technical Interview', description: 'Coding and technical discussion', duration: '45 minutes' },
+      { round: 'Communication Round', description: 'Group discussion and communication', duration: '30 minutes' },
+      { round: 'HR Interview', description: 'Behavioral and HR assessment', duration: '30 minutes' }
+    ],
+    roles: [
+      { title: 'Programmer Analyst', department: 'IT Services', salaryPackage: '6-8 LPA' },
+      { title: 'Software Engineer', department: 'Development', salaryPackage: '8-10 LPA' },
+      { title: 'Associate Engineer', department: 'Digital', salaryPackage: '10-12 LPA' }
+    ],
+    requiredCourses: [
+      { name: 'Full Stack Development', platform: 'Coursera', url: '#' },
+      { name: 'Java Programming', platform: 'Udemy', url: '#' },
+      { name: 'Aptitude Preparation', platform: 'Fresherworld', url: '#' }
+    ],
+    preparationMaterial: {
+      practice: [
+        { title: 'Online Test Practice', description: 'Aptitude and technical', difficulty: 'Medium', duration: '90 mins', type: 'Aptitude', resourceUrl: '#' },
+        { title: 'Coding Practice', description: 'Programming problems', difficulty: 'Hard', duration: '60 mins', type: 'Coding', resourceUrl: '#' }
+      ],
+      mockInterviews: [
+        { title: 'Mock Technical Interview', description: 'Technical interview simulation', type: 'Technical', duration: '45 mins' },
+        { title: 'Mock HR Interview', description: 'HR interview simulation', type: 'HR', duration: '30 mins' }
       ]
     },
-    interviewTips: 'Prepare well for coding and aptitude.',
+    interviewTips: 'Prepare well for coding, aptitude, and be ready to discuss your projects in detail.',
     skills: ['Java', 'Python', 'Aptitude'],
     certifications: ['Cognizant Certification'],
     isActive: true
@@ -235,10 +308,15 @@ for (let i = 6; i <= 36; i++) {
     name: `Company ${i}`,
     logo: '',
     description: `Description for Company ${i}`,
+    detailedDescription: `Detailed description for Company ${i}. This company offers excellent opportunities for freshers with comprehensive training programs and career growth paths.`,
+    requirements: 'Strong programming skills and good communication abilities.',
+    importance: `Company ${i} is a great place to start your career with exposure to cutting-edge technologies.`,
     industry: 'IT Services',
     location: 'India',
     website: 'https://example.com',
     package: `${5 + Math.floor(Math.random() * 10)}-${10 + Math.floor(Math.random() * 15)} LPA`,
+    visitDate: '2025-10-15',
+    intake: 50 + Math.floor(Math.random() * 100),
     eligibility: {
       cgpa: 6.0 + Math.random() * 2,
       departments: ['CSE', 'ECE', 'EEE', 'IT'],
@@ -246,11 +324,25 @@ for (let i = 6; i <= 36; i++) {
       backlogAllowed: Math.random() > 0.5,
       skills: ['Java', 'Python', 'Aptitude']
     },
-    selectionProcess: {
-      rounds: [
-        { name: 'Online Test', description: 'Aptitude and technical' },
-        { name: 'Technical Interview', description: 'Coding assessment' },
-        { name: 'HR Interview', description: 'Behavioral assessment' }
+    selectionProcess: [
+      { round: 'Online Test', description: 'Aptitude and technical assessment', duration: '60 minutes' },
+      { round: 'Technical Interview', description: 'Coding and technical discussion', duration: '45 minutes' },
+      { round: 'HR Interview', description: 'Behavioral assessment', duration: '30 minutes' }
+    ],
+    roles: [
+      { title: 'Software Engineer', department: 'Development', salaryPackage: '6-8 LPA' },
+      { title: 'Systems Engineer', department: 'IT Services', salaryPackage: '7-9 LPA' }
+    ],
+    requiredCourses: [
+      { name: 'Data Structures', platform: 'Coursera', url: '#' },
+      { name: 'Java Programming', platform: 'Udemy', url: '#' }
+    ],
+    preparationMaterial: {
+      practice: [
+        { title: 'Aptitude Practice', description: 'Quantitative and logical reasoning', difficulty: 'Medium', duration: '60 mins', type: 'Aptitude', resourceUrl: '#' }
+      ],
+      mockInterviews: [
+        { title: 'Mock Technical Interview', description: 'Technical interview simulation', type: 'Technical', duration: '45 mins' }
       ]
     },
     interviewTips: 'Prepare well for technical and aptitude rounds.',
@@ -652,22 +744,18 @@ export const mockAuthService = {
 export const mockCompanyService = {
   getAllCompanies: async () => {
     return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(mockCompanies);
-      }, 500);
+      resolve(mockCompanies);
     });
   },
 
   getCompanyById: async (id) => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const company = mockCompanies.find(c => c._id === id);
-        if (company) {
-          resolve(company);
-        } else {
-          reject(new Error('Company not found'));
-        }
-      }, 500);
+      const company = mockCompanies.find(c => c._id === id);
+      if (company) {
+        resolve(company);
+      } else {
+        reject(new Error('Company not found'));
+      }
     });
   }
 };
