@@ -42,6 +42,9 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/tests', require('./routes/testRoutes'));
 app.use('/api/profiles', require('./routes/profileRoutes'));
+app.use('/api/compiler', require('./routes/compilerRoutes'));
+app.use('/api/ai-interview', require('./routes/aiInterviewRoutes'));
+app.use('/api/resume-analyzer', require('./routes/resumeAnalyzerRoutes'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

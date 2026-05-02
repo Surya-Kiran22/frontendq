@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { profileService } from '../../services/profileService';
+import { aiInterviewService } from '../../services/aiInterviewService';
 import {
   MicrophoneIcon,
   VideoCameraIcon,
@@ -150,11 +151,10 @@ const AIInterview = () => {
 
   const checkPlacementStatus = async () => {
     try {
-      const profile = await profileService.getProfile();
-      const placed = profile.profile?.placementStatus === 'Placed';
-      setIsPlaced(placed);
+      const result = await aiInterviewService.checkPlacementStatus();
+      setIsPlaced(result.isPlaced);
     } catch (error) {
-      // Error checking placement status
+      console.error('Error checking placement status:', error);
     } finally {
       setLoading(false);
     }
@@ -185,8 +185,15 @@ const AIInterview = () => {
         setTimer(mockAIInterviewService.questions[currentQuestion + 1].duration);
       } else {
         setStep('reviewing');
-        const report = mockAIInterviewService.generateFinalReport(updatedResponses);
-        setFinalReport(report);
+        // Submit to backend for final analysis
+        try {
+          const result = await aiInterviewService.submitInterview(updatedResponses);
+          const report = mockAIInterviewService.generateFinalReport(updatedResponses, result.analysis);
+          setFinalReport(report);
+        } catch (error) {
+          const report = mockAIInterviewService.generateFinalReport(updatedResponses);
+          setFinalReport(report);
+        }
         setStep('complete');
       }
     }

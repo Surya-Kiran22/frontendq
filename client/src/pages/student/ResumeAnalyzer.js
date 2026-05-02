@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { companyService } from '../../services/companyService';
+import { resumeAnalyzerService } from '../../services/resumeAnalyzerService';
 import {
   DocumentArrowUpIcon,
   SparklesIcon,
@@ -160,7 +161,7 @@ const ResumeAnalyzer = () => {
       // Read file as base64 (mock)
       const reader = new FileReader();
       reader.onload = async (e) => {
-        const result = await mockAIAnalysisService.analyzeResume(
+        const result = await resumeAnalyzerService.analyzeResume(
           e.target.result,
           { cgpa: user?.cgpa || 8.5, backlogs: user?.backlogs || 0 }
         );
