@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   DocumentArrowUpIcon,
   SparklesIcon,
@@ -27,7 +27,7 @@ const mockAIAnalysisService = {
     await new Promise(resolve => setTimeout(resolve, 3000));
     
     // Get all companies
-    const companies = await mockCompanyService.getAllCompanies();
+    const companies = await companyService.getAllCompanies();
     
     // Mock analysis results
     const eligibleCompanies = [];

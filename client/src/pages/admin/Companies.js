@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   BuildingOfficeIcon,
   PlusIcon,
@@ -56,7 +56,7 @@ const AdminCompanies = () => {
 
   const fetchCompanies = async () => {
     try {
-      const companiesData = await mockCompanyService.getAllCompanies();
+      const companiesData = await companyService.getAllCompanies();
       setCompanies(companiesData);
     } catch (error) {
       toast.error('Failed to fetch companies');

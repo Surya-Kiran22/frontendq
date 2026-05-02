@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { mockProfileService } from '../../services/mockData';
+import { profileService } from '../../services/profileService';
 import {
   UserIcon,
   AcademicCapIcon,
@@ -56,7 +56,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const data = await mockProfileService.getProfile();
+      const data = await profileService.getProfile();
       setProfile(data);
     } catch (error) {
       toast.error('Failed to load profile');
@@ -81,7 +81,7 @@ const Profile = () => {
         year: formData.get('year')
       };
 
-      await mockProfileService.updateProfile(updateData);
+      await profileService.createOrUpdateProfile(updateData);
       updateUser(updateData);
       setProfile(prev => ({ ...prev, ...updateData }));
       toast.success('Profile updated successfully');
@@ -133,7 +133,7 @@ const Profile = () => {
         id: Date.now()
       }];
       
-      await mockProfileService.updateProjects(updatedProjects);
+      await profileService.createOrUpdateProfile({ projects: updatedProjects });
       
       setProfile(prev => ({
         ...prev,
@@ -154,7 +154,7 @@ const Profile = () => {
   const handleRemoveProject = async (projectId) => {
     try {
       const updatedProjects = profile.profile.projects.filter(p => p.id !== projectId);
-      await mockProfileService.updateProjects(updatedProjects);
+      await profileService.createOrUpdateProfile({ projects: updatedProjects });
       
       setProfile(prev => ({
         ...prev,
@@ -182,7 +182,7 @@ const Profile = () => {
         backlogSemesters: formData.get('backlogSemesters')
       };
 
-      await mockProfileService.updateEducation(updateData);
+      await profileService.createOrUpdateProfile({ education: updateData });
       setProfile(prev => ({
         ...prev,
         profile: {
@@ -212,7 +212,7 @@ const Profile = () => {
         skelo: formData.get('skelo')
       };
 
-      await mockProfileService.updateCodingProfiles(updateData);
+      await profileService.createOrUpdateProfile({ codingProfiles: updateData });
       setProfile(prev => ({
         ...prev,
         profile: {
@@ -242,7 +242,7 @@ const Profile = () => {
         apps: formData.getAll('apps')
       };
 
-      await mockProfileService.updateSkills(updateData);
+      await profileService.createOrUpdateProfile({ skills: updateData });
       setProfile(prev => ({
         ...prev,
         profile: {
@@ -267,7 +267,7 @@ const Profile = () => {
         date: new Date(newCert.date)
       }];
       
-      await mockProfileService.updateSkillsCertifications({ certifications: updatedCerts });
+      await profileService.createOrUpdateProfile({ certifications: updatedCerts });
       
       setProfile(prev => ({
         ...prev,
@@ -291,7 +291,7 @@ const Profile = () => {
         cert => cert.name !== certToRemove.name
       );
       
-      await mockProfileService.updateSkillsCertifications({ certifications: updatedCerts });
+      await profileService.createOrUpdateProfile({ certifications: updatedCerts });
       
       setProfile(prev => ({
         ...prev,
@@ -330,7 +330,7 @@ const Profile = () => {
         [documentType]: fileName
       };
       
-      await mockProfileService.updateDocuments(updatedDocuments);
+      await profileService.createOrUpdateProfile({ documents: updatedDocuments });
       
       setProfile(prev => ({
         ...prev,

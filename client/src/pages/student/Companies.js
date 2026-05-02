@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   BuildingOfficeIcon,
@@ -26,37 +26,15 @@ const Companies = () => {
   
   const fetchCompanies = async () => {
     try {
-      // Use mock data instead of API calls
-      const companiesData = await mockCompanyService.getAllCompanies();
-      
-      // Filter companies based on user's department
-      const userDepartment = user?.department || 'CSE'; // Default to CSE if no department
-      const filteredCompanies = companiesData.filter(company => {
-        // Check if user's department is in company's eligibility departments
-        return company.eligibility?.departments?.includes(userDepartment);
-      });
-      
-      // Add mock visit dates and additional data
-      const enhancedCompanies = filteredCompanies.map((company, index) => ({
-        ...company,
-        visitDate: company.visitDate || new Date(Date.now() + (index + 1) * 7 * 86400000).toISOString(),
-        intake: company.intake || 100 + Math.floor(Math.random() * 200),
-        headquarters: company.location || 'India',
-        companySize: ['100-500', '500-1000', '1000-5000', '5000+'][index % 4],
-        positions: [
-          { title: 'Software Engineer' },
-          { title: 'Data Analyst' },
-          { title: 'Product Manager' }
-        ].slice(0, (index % 3) + 1)
-      }));
-      setCompanies(enhancedCompanies);
+      const companiesData = await companyService.getAllCompanies();
+      setCompanies(companiesData);
       
       // Separate visited companies
       const today = new Date();
-      const visited = enhancedCompanies.filter(c => new Date(c.visitDate) < today);
+      const visited = companiesData.filter(c => new Date(c.visitDate) < today);
       setVisitedCompanies(visited);
     } catch (error) {
-      // Error fetching companies
+      console.error('Error fetching companies:', error);
     } finally {
       setLoading(false);
     }

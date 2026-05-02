@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockProfileService } from '../../services/mockData';
+import { profileService } from '../../services/profileService';
 import {
   MicrophoneIcon,
   VideoCameraIcon,
@@ -150,7 +150,7 @@ const AIInterview = () => {
 
   const checkPlacementStatus = async () => {
     try {
-      const profile = await mockProfileService.getProfile();
+      const profile = await profileService.getProfile();
       const placed = profile.profile?.placementStatus === 'Placed';
       setIsPlaced(placed);
     } catch (error) {

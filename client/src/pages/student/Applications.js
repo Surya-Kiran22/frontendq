@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   DocumentTextIcon,
   BuildingOfficeIcon,
@@ -65,7 +65,7 @@ const Applications = () => {
 
   const fetchApplications = useCallback(async () => {
     try {
-      const companies = await mockCompanyService.getAllCompanies();
+      const companies = await companyService.getAllCompanies();
       const mockApplications = generateMockApplications(companies);
       setApplications(mockApplications);
     } catch (error) {

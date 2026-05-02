@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   UsersIcon,
   BuildingOfficeIcon,
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const companies = await mockCompanyService.getAllCompanies();
+      const companies = await companyService.getAllCompanies();
       
       // Mock company applications data
       const companyApps = companies.map(company => ({

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { mockProfileService } from '../../services/mockData';
+import { profileService } from '../../services/profileService';
 import {
   UserIcon,
   MagnifyingGlassIcon,
@@ -159,8 +159,8 @@ const AdminStudents = () => {
     
     try {
       // Fetch detailed profile data
-      const profileData = await mockProfileService.getProfile();
-      setStudentProfile(profileData);
+      const profiles = await profileService.getAllProfiles();
+      setStudentProfile(profiles);
     } catch (error) {
       toast.error('Failed to load student profile');
     }

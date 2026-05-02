@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockTestService } from '../../services/mockData';
+import { testService } from '../../services/testService';
 import {
   ClockIcon,
   ComputerDesktopIcon,
@@ -147,7 +147,7 @@ const OnlineTest = () => {
 
   const fetchTestDetails = useCallback(async () => {
     try {
-      const testData = await mockTestService.getTestById(testId);
+      const testData = await testService.getTestById(testId);
       
       const testWithQuestions = {
         ...testData,

@@ -1,17 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { mockAuthService } from '../services/mockData';
-
-// Mock API instance (replaces axios)
-const api = {
-  get: async () => ({ data: { user: null } }),
-  post: async () => ({ data: {} }),
-  defaults: {
-    headers: {
-      common: {}
-    }
-  }
-};
+import { authService } from '../services/authService';
 
 // Auth Context
 const AuthContext = createContext();
@@ -90,56 +79,35 @@ const initialState = {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Set up axios interceptor for token
-  useEffect(() => {
-    if (state.token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
-      localStorage.setItem('token', state.token);
-    } else {
-      delete api.defaults.headers.common['Authorization'];
-      localStorage.removeItem('token');
-    }
-  }, [state.token]);
-
   // Check token validity on mount
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const response = await api.get('/auth/verify');
-          dispatch({
-            type: 'LOGIN_SUCCESS',
-            payload: {
-              user: response.data.user,
-              token: token,
-            },
-          });
-        } catch (error) {
-          localStorage.removeItem('token');
-          dispatch({ type: 'LOGOUT' });
-        }
+      const user = authService.getCurrentUser();
+      const token = authService.getToken();
+      if (token && user) {
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          payload: { user, token },
+        });
       }
     };
 
     checkAuth();
   }, []);
 
-  // Login function (using mock data)
+  // Login function (using backend API)
   const login = async (rollNumber, password) => {
     dispatch({ type: 'LOGIN_START' });
     try {
-      const response = await mockAuthService.login(rollNumber, password);
+      const response = await authService.login(rollNumber, password);
 
-      const { user, token } = response;
-      
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user, token },
+        payload: { user: response.user, token: response.token },
       });
 
-      toast.success(`Welcome back, ${user.name}!`);
-      return { success: true, user };
+      toast.success(`Welcome back, ${response.user.name}!`);
+      return { success: true, user: response.user };
     } catch (error) {
       const errorMessage = error.message || 'Login failed';
       dispatch({
@@ -151,17 +119,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register function (using mock data)
+  // Register function (using backend API)
   const register = async (userData) => {
     dispatch({ type: 'REGISTER_START' });
     try {
-      const response = await mockAuthService.register(userData);
+      const response = await authService.register(userData);
 
-      const { user, token } = response;
-      
       dispatch({
         type: 'REGISTER_SUCCESS',
-        payload: { user, token },
+        payload: { user: response.user, token: response.token },
       });
 
       toast.success('Registration successful!');
@@ -179,6 +145,7 @@ export const AuthProvider = ({ children }) => {
 
   // Logout function
   const logout = () => {
+    authService.logout();
     dispatch({ type: 'LOGOUT' });
     toast.success('Logged out successfully');
   };
@@ -197,7 +164,6 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUser,
-    api,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

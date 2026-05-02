@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   DocumentTextIcon,
   BuildingOfficeIcon,

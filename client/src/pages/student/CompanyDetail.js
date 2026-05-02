@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   BuildingOfficeIcon,
   MapPinIcon,
@@ -38,7 +38,7 @@ const CompanyDetail = () => {
 
   const fetchCompanyDetails = useCallback(async () => {
     try {
-      const companyData = await mockCompanyService.getCompanyById(id);
+      const companyData = await companyService.getCompanyById(id);
       setCompany(companyData);
       
       // Mock user tracking data

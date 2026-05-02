@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
+import CodeProtection from './components/CodeProtection';
 
 // Layout Components
 import Layout from './components/Layout';
@@ -39,6 +40,7 @@ function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
+        <CodeProtection />
         <div className="min-h-screen bg-gray-50">
           <Routes>
             {/* Public Routes */}

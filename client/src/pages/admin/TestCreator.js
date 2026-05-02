@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   PlusIcon,
   XMarkIcon,
@@ -84,8 +84,8 @@ const TestCreator = () => {
 
   const fetchCompanies = async () => {
     try {
-      const companiesData = await mockCompanyService.getAllCompanies();
-      setCompanies(companiesData);
+      const companies = await companyService.getAllCompanies();
+      setCompanies(companies);
     } catch (error) {
       toast.error('Failed to load companies');
     } finally {

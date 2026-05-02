@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { mockCompanyService } from '../../services/mockData';
+import { companyService } from '../../services/companyService';
 import {
   BuildingOfficeIcon,
   DocumentTextIcon,
@@ -35,7 +35,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       // Use mock data instead of API calls
-      const companiesData = await mockCompanyService.getAllCompanies();
+      const companiesData = await companyService.getAllCompanies();
 
       // Mock recent applications
       const mockApplications = companiesData.slice(0, 5).map((company, index) => ({

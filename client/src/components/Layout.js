@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { mockCompanyService } from '../services/mockData';
+import { companyService } from '../services/companyService';
 import {
   HomeIcon,
   BuildingOfficeIcon,

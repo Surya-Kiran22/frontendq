@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { mockTestService } from '../../services/mockData';
+import { testService } from '../../services/testService';
 import {
   ClockIcon,
   ClipboardDocumentListIcon,
@@ -67,7 +67,7 @@ const Tests = () => {
   const fetchTests = async () => {
     try {
       // Use mock data
-      const testsData = await mockTestService.getAllTests();
+      const testsData = await testService.getAllTests();
       const mockTests = testsData.map(test => ({
         ...test,
         attemptStatus: ['completed', 'in-progress', 'not-attempted'][Math.floor(Math.random() * 3)],
