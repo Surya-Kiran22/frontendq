@@ -89,15 +89,47 @@ const OnlineTest = () => {
     }
   }, []);
 
-  const startExam = useCallback(() => {
-    if (webcamWorking && microphoneWorking) {
-      // Randomly assign question set (1, 2, or 3) to prevent cheating
-      const randomSet = Math.floor(Math.random() * 3) + 1;
-      setAssignedQuestionSet(randomSet);
-      setSystemTestStep('ready');
-      toast.success(`You have been assigned Question Set ${String.fromCharCode(64 + randomSet)}`);
+  const startExam = useCallback(async () => {
+    try {
+      // Test internet connection and get IP address
+      const response = await fetch('https://httpbin.org/ip', { 
+        method: 'GET',
+        cache: 'no-cache'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const userIP = data.origin;
+        
+        // Test additional connectivity
+        const connectivityTest = await fetch('https://httpbin.org/get', { 
+          method: 'HEAD',
+          cache: 'no-cache'
+        });
+        
+        if (connectivityTest.ok) {
+          // Randomly assign question set (1, 2, or 3) to prevent cheating
+          const randomSet = Math.floor(Math.random() * 3) + 1;
+          setAssignedQuestionSet(randomSet);
+          setSystemTestStep('ready');
+          
+          // Store IP address for logging
+          setAttempt(prev => ({
+            ...prev,
+            ipAddress: userIP
+          }));
+          
+          toast.success(`Connection verified! IP: ${userIP} | Question Set ${String.fromCharCode(64 + randomSet)}`);
+        } else {
+          toast.error('Internet connection unstable. Please check your connection.');
+        }
+      } else {
+        toast.error('Unable to verify internet connection.');
+      }
+    } catch (error) {
+      toast.error('No internet connection. Please check your network and try again.');
     }
-  }, [webcamWorking, microphoneWorking]);
+  }, []);
 
   const cleanupStreams = useCallback(() => {
     // Stop media recorder if active
@@ -160,8 +192,14 @@ const OnlineTest = () => {
         _id: 'mock-attempt-' + Date.now(),
         status: 'in-progress',
         startedAt: new Date().toISOString(),
-        questionSet: randomSet
+        questionSet: randomSet,
+        studentRollNumber: '2025CS' + Math.floor(Math.random() * 1000).toString().padStart(3, '0')
       });
+      
+      // Initialize proctoring features
+      if (testData.proctoring) {
+        initializeProctoring(testData.proctoring);
+      }
     } catch (error) {
       toast.error('Failed to load test');
       navigate('/tests');
@@ -173,12 +211,24 @@ const OnlineTest = () => {
   useEffect(() => {
     checkDeviceType();
     fetchTestDetails();
+    // Auto-start internet connection check
+    setTimeout(() => {
+      startExam();
+    }, 1000);
     return () => {
       cleanupStreams();
       if (timerRef.current) clearInterval(timerRef.current);
       if (proctoringIntervalRef.current) clearInterval(proctoringIntervalRef.current);
     };
-  }, [checkDeviceType, fetchTestDetails, cleanupStreams]);
+  }, [checkDeviceType, fetchTestDetails, cleanupStreams, startExam]);
+
+  // Auto-request fullscreen when test is loaded
+  useEffect(() => {
+    if (test && test.proctoring?.enableFullscreen && !isFullscreen) {
+      // Show a fullscreen prompt instead of auto-requesting
+      setRequireFullscreenToContinue(true);
+    }
+  }, [test, isFullscreen]);
 
   const initializeProctoring = async (proctoringConfig) => {
     try {
@@ -298,7 +348,46 @@ const OnlineTest = () => {
       }
     };
     
+    // Prevent developer tools
+    const handleKeyDown = (e) => {
+      // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        (e.ctrlKey && e.key === 'u')
+      ) {
+        e.preventDefault();
+        handleViolation('developer-tools', 'Developer tools access attempted');
+        toast.error('Developer tools are not allowed during exam!');
+        return false;
+      }
+    };
+    
+    // Detect developer tools opening
+    let devtools = { open: false, orientation: null };
+    const threshold = 160;
+    
+    const checkDevTools = () => {
+      if (
+        window.outerHeight - window.innerHeight > threshold ||
+        window.outerWidth - window.innerWidth > threshold
+      ) {
+        if (!devtools.open) {
+          devtools.open = true;
+          handleViolation('developer-tools', 'Developer tools opened');
+          toast.error('Developer tools detected! Exam suspended.');
+          setExamSuspended(true);
+        }
+      } else {
+        devtools.open = false;
+      }
+    };
+    
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('keydown', handleKeyDown);
+    
+    // Check for devtools periodically
+    const devtoolsInterval = setInterval(checkDevTools, 1000);
     
     // Prevent right-click
     if (test?.proctoring?.allowRightClick === false) {
@@ -330,6 +419,8 @@ const OnlineTest = () => {
     // Return cleanup function
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('keydown', handleKeyDown);
+      clearInterval(devtoolsInterval);
       if (test?.proctoring?.allowRightClick === false && handleContextMenuRef.current) {
         document.removeEventListener('contextmenu', handleContextMenuRef.current);
         handleContextMenuRef.current = null;
@@ -407,14 +498,33 @@ const OnlineTest = () => {
 
   const requestFullscreen = async () => {
     try {
+      console.log('Attempting to enter fullscreen...');
       const element = document.documentElement;
+      
+      // Check if fullscreen is already active
+      if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+        console.log('Already in fullscreen mode');
+        setIsFullscreen(true);
+        setRequireFullscreenToContinue(false);
+        return;
+      }
+      
+      // Try different fullscreen methods
       if (element.requestFullscreen) {
+        console.log('Using requestFullscreen');
         await element.requestFullscreen();
       } else if (element.webkitRequestFullscreen) {
+        console.log('Using webkitRequestFullscreen');
         await element.webkitRequestFullscreen();
       } else if (element.msRequestFullscreen) {
+        console.log('Using msRequestFullscreen');
         await element.msRequestFullscreen();
+      } else {
+        console.log('Fullscreen API not supported');
+        toast.error('Fullscreen mode is not supported by your browser');
+        return;
       }
+      
       setIsFullscreen(true);
       setRequireFullscreenToContinue(false);
       
@@ -422,7 +532,11 @@ const OnlineTest = () => {
       document.addEventListener('fullscreenchange', handleFullscreenChange);
       document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
       document.addEventListener('msfullscreenchange', handleFullscreenChange);
+      
+      console.log('Fullscreen request successful');
     } catch (error) {
+      console.error('Fullscreen error:', error);
+      toast.error('Failed to enter fullscreen mode. Please try manually pressing F11.');
       handleViolation('fullscreen-failed', 'Failed to enter fullscreen mode');
     }
   };
@@ -560,85 +674,52 @@ const OnlineTest = () => {
   if (systemTestStep !== 'ready') {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
           <div className="text-center mb-8">
-            <VideoCameraIcon className="h-16 w-16 text-primary-600 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">System Test</h2>
+            <div className="mx-auto h-16 w-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mb-4">
+              <ComputerDesktopIcon className="h-8 w-8 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">System Check</h2>
             <p className="text-gray-600">
-              Please verify your webcam and microphone are working before starting the exam.
+              Checking your internet connection...
             </p>
           </div>
 
           <div className="space-y-6">
-            {/* Webcam Test */}
+            {/* Internet Connection Test */}
             <div className="border rounded-lg p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Webcam Test</h3>
-                {webcamWorking ? (
+                <h3 className="text-lg font-semibold text-gray-900">Internet Connection</h3>
+                {systemTestStep === 'ready' ? (
                   <CheckCircleIcon className="h-6 w-6 text-green-600" />
                 ) : (
-                  <XCircleIcon className="h-6 w-6 text-gray-400" />
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                 )}
               </div>
-              <div className="bg-black rounded-lg overflow-hidden mb-4">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  className="w-full h-48 object-cover"
-                />
+              <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                <div className="text-center text-gray-600">
+                  <div className="text-2xl mb-2">🌐</div>
+                  <p className="text-sm">Testing connection and identifying IP address...</p>
+                  {attempt?.ipAddress && (
+                    <p className="text-xs text-gray-500 mt-2">IP: {attempt.ipAddress}</p>
+                  )}
+                </div>
               </div>
-              <button
-                onClick={testWebcam}
-                disabled={webcamWorking}
-                className={`w-full py-2 px-4 rounded-lg font-medium ${
-                  webcamWorking
-                    ? 'bg-green-100 text-green-800 cursor-not-allowed'
-                    : 'btn-primary'
-                }`}
-              >
-                {webcamWorking ? 'Webcam Working' : 'Test Webcam'}
-              </button>
-            </div>
-
-            {/* Microphone Test */}
-            <div className="border rounded-lg p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Microphone Test</h3>
-                {microphoneWorking ? (
-                  <CheckCircleIcon className="h-6 w-6 text-green-600" />
-                ) : (
-                  <XCircleIcon className="h-6 w-6 text-gray-400" />
-                )}
-              </div>
-              <p className="text-gray-600 mb-4">
-                Click the button below to test your microphone. You will be prompted to allow microphone access.
-              </p>
-              <button
-                onClick={testMicrophone}
-                disabled={microphoneWorking}
-                className={`w-full py-2 px-4 rounded-lg font-medium ${
-                  microphoneWorking
-                    ? 'bg-green-100 text-green-800 cursor-not-allowed'
-                    : 'btn-primary'
-                }`}
-              >
-                {microphoneWorking ? 'Microphone Working' : 'Test Microphone'}
-              </button>
             </div>
 
             {/* Start Exam Button */}
-            <button
-              onClick={startExam}
-              disabled={!webcamWorking || !microphoneWorking}
-              className={`w-full py-3 px-4 rounded-lg font-medium text-lg ${
-                webcamWorking && microphoneWorking
-                  ? 'btn-primary'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              Start Exam
-            </button>
+            <div className="pt-6">
+              <button
+                onClick={startExam}
+                disabled={systemTestStep !== 'ready'}
+                className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {systemTestStep === 'ready' ? 'Start Exam' : 'Checking Connection...'}
+              </button>
+              <p className="text-xs text-gray-500 text-center mt-2">
+                A stable internet connection is required for the exam
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -710,17 +791,31 @@ const OnlineTest = () => {
   const progress = ((currentQuestion + 1) / test.questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative">
+      {/* Roll Number Watermark */}
+      {attempt?.studentRollNumber && (
+        <div className="fixed inset-0 pointer-events-none z-10 flex items-center justify-center">
+          <div className="text-gray-200 opacity-20 text-6xl font-bold transform rotate-45 select-none">
+            {attempt.studentRollNumber}
+          </div>
+        </div>
+      )}
+      
       {/* Fullscreen Required Overlay */}
       {requireFullscreenToContinue && (
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md text-center border border-slate-100">
-            <div className="mx-auto h-16 w-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center mb-4">
-              <ExclamationTriangleIcon className="h-8 w-8 text-white" />
+            <div className="mx-auto h-16 w-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mb-4">
+              <ComputerDesktopIcon className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-2">Fullscreen Required</h2>
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">
+              {violations.length > 0 ? 'Fullscreen Required' : 'Enter Fullscreen Mode'}
+            </h2>
             <p className="text-slate-600 mb-6">
-              You exited fullscreen mode. Please re-enter fullscreen to continue the exam.
+              {violations.length > 0 
+                ? 'You exited fullscreen mode. Please re-enter fullscreen to continue the exam.'
+                : 'This exam requires fullscreen mode to maintain academic integrity. Please click below to enter fullscreen.'
+              }
             </p>
             <button
               onClick={requestFullscreen}
@@ -765,15 +860,25 @@ const OnlineTest = () => {
                 </div>
               )}
               
-              {/* Fullscreen indicator */}
+              {/* Fullscreen indicator and button */}
               {test?.proctoring?.enableFullscreen && (
-                <div className={`flex items-center space-x-1 px-3 py-2 rounded-xl ${
-                  isFullscreen ? 'bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200' : 'bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-200'
-                }`}>
-                  <ComputerDesktopIcon className="h-4 w-4" />
-                  <span className="text-xs font-bold">
-                    {isFullscreen ? 'Fullscreen' : 'Exit Fullscreen'}
-                  </span>
+                <div className="flex items-center space-x-2">
+                  <div className={`flex items-center space-x-1 px-3 py-2 rounded-xl ${
+                    isFullscreen ? 'bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-700 border border-emerald-200' : 'bg-gradient-to-r from-rose-100 to-red-100 text-rose-700 border border-rose-200'
+                  }`}>
+                    <ComputerDesktopIcon className="h-4 w-4" />
+                    <span className="text-xs font-bold">
+                      {isFullscreen ? 'Fullscreen' : 'Not Fullscreen'}
+                    </span>
+                  </div>
+                  {!isFullscreen && (
+                    <button
+                      onClick={requestFullscreen}
+                      className="px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-bold rounded-xl hover:shadow-lg transition-all"
+                    >
+                      Enter Fullscreen
+                    </button>
+                  )}
                 </div>
               )}
               

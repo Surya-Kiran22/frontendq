@@ -60,6 +60,10 @@ const CompanyDetail = () => {
     }
   }, [id, navigate]);
 
+  useEffect(() => {
+    fetchCompanyDetails();
+  }, [fetchCompanyDetails]);
+
   const handleApplicationSubmit = async (e) => {
     e.preventDefault();
     

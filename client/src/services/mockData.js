@@ -47,11 +47,11 @@ const mockCompanies = [
     location: 'Mumbai, India',
     website: 'https://www.tcs.com',
     package: '7-12 LPA',
-    visitDate: '2025-06-15',
+    visitDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
     intake: 150,
     eligibility: {
       cgpa: 7.0,
-      departments: ['CSE', 'ECE', 'EEE', 'IT'],
+      departments: ['CSE', 'IT', 'ECE'],
       year: 2025,
       backlogAllowed: false,
       skills: ['Java', 'Python', 'SQL', 'Aptitude']
@@ -103,11 +103,11 @@ const mockCompanies = [
     location: 'Bangalore, India',
     website: 'https://www.infosys.com',
     package: '6-10 LPA',
-    visitDate: '2025-07-20',
+    visitDate: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
     intake: 200,
     eligibility: {
       cgpa: 6.5,
-      departments: ['CSE', 'ECE', 'EEE', 'IT', 'Mechanical'],
+      departments: ['CSE', 'IT', 'ECE', 'EEE'],
       year: 2025,
       backlogAllowed: false,
       skills: ['Python', 'Java', 'Aptitude']
@@ -148,13 +148,18 @@ const mockCompanies = [
     name: 'Wipro',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Wipro_Primary_Logo_Color.png/1200px-Wipro_Primary_Logo_Color.png',
     description: 'Wipro Limited is an Indian multinational corporation that provides information technology, consulting and business process services.',
+    detailedDescription: 'Wipro is a leading global information technology, consulting and business process services company. With over 250,000 employees across 66 countries, Wipro helps clients innovate and transform their businesses through digital technologies. Wipro is known for its strong focus on sustainability, innovation, and employee development.',
+    requirements: 'Strong programming skills in Java, Python, or JavaScript. Good understanding of data structures and algorithms. Excellent communication skills and ability to work in teams.',
+    importance: 'Wipro offers excellent training programs, global exposure, and career growth opportunities. Being selected by Wipro provides a strong foundation for a career in IT with exposure to cutting-edge technologies.',
     industry: 'IT Services',
     location: 'Bangalore, India',
     website: 'https://www.wipro.com',
     package: '5-9 LPA',
+    visitDate: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
+    intake: 120,
     eligibility: {
       cgpa: 6.0,
-      departments: ['CSE', 'ECE', 'EEE', 'IT'],
+      departments: ['CSE', 'IT', 'Mechanical'],
       year: 2025,
       backlogAllowed: true,
       skills: ['Java', 'SQL', 'Aptitude']
@@ -206,11 +211,11 @@ const mockCompanies = [
     location: 'Dublin, Ireland',
     website: 'https://www.accenture.com',
     package: '8-15 LPA',
-    visitDate: '2025-08-10',
+    visitDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString(),
     intake: 100,
     eligibility: {
       cgpa: 7.0,
-      departments: ['CSE', 'ECE', 'EEE', 'IT', 'Mechanical'],
+      departments: ['CSE', 'IT', 'ECE', 'EEE'],
       year: 2025,
       backlogAllowed: false,
       skills: ['Aptitude', 'Communication', 'Technical']
@@ -259,11 +264,11 @@ const mockCompanies = [
     location: 'Teaneck, New Jersey',
     website: 'https://www.cognizant.com',
     package: '6-12 LPA',
-    visitDate: '2025-09-05',
+    visitDate: new Date(Date.now() + 55 * 24 * 60 * 60 * 1000).toISOString(),
     intake: 180,
     eligibility: {
       cgpa: 6.5,
-      departments: ['CSE', 'ECE', 'EEE', 'IT'],
+      departments: ['CSE', 'IT', 'ECE'],
       year: 2025,
       backlogAllowed: false,
       skills: ['Java', 'Python', 'Aptitude']
@@ -300,57 +305,6 @@ const mockCompanies = [
     isActive: true
   }
 ];
-
-// Add more mock companies to make it 36
-for (let i = 6; i <= 36; i++) {
-  mockCompanies.push({
-    _id: `${i}`,
-    name: `Company ${i}`,
-    logo: '',
-    description: `Description for Company ${i}`,
-    detailedDescription: `Detailed description for Company ${i}. This company offers excellent opportunities for freshers with comprehensive training programs and career growth paths.`,
-    requirements: 'Strong programming skills and good communication abilities.',
-    importance: `Company ${i} is a great place to start your career with exposure to cutting-edge technologies.`,
-    industry: 'IT Services',
-    location: 'India',
-    website: 'https://example.com',
-    package: `${5 + Math.floor(Math.random() * 10)}-${10 + Math.floor(Math.random() * 15)} LPA`,
-    visitDate: '2025-10-15',
-    intake: 50 + Math.floor(Math.random() * 100),
-    eligibility: {
-      cgpa: 6.0 + Math.random() * 2,
-      departments: ['CSE', 'ECE', 'EEE', 'IT'],
-      year: 2025,
-      backlogAllowed: Math.random() > 0.5,
-      skills: ['Java', 'Python', 'Aptitude']
-    },
-    selectionProcess: [
-      { round: 'Online Test', description: 'Aptitude and technical assessment', duration: '60 minutes' },
-      { round: 'Technical Interview', description: 'Coding and technical discussion', duration: '45 minutes' },
-      { round: 'HR Interview', description: 'Behavioral assessment', duration: '30 minutes' }
-    ],
-    roles: [
-      { title: 'Software Engineer', department: 'Development', salaryPackage: '6-8 LPA' },
-      { title: 'Systems Engineer', department: 'IT Services', salaryPackage: '7-9 LPA' }
-    ],
-    requiredCourses: [
-      { name: 'Data Structures', platform: 'Coursera', url: '#' },
-      { name: 'Java Programming', platform: 'Udemy', url: '#' }
-    ],
-    preparationMaterial: {
-      practice: [
-        { title: 'Aptitude Practice', description: 'Quantitative and logical reasoning', difficulty: 'Medium', duration: '60 mins', type: 'Aptitude', resourceUrl: '#' }
-      ],
-      mockInterviews: [
-        { title: 'Mock Technical Interview', description: 'Technical interview simulation', type: 'Technical', duration: '45 mins' }
-      ]
-    },
-    interviewTips: 'Prepare well for technical and aptitude rounds.',
-    skills: ['Java', 'Python', 'Aptitude'],
-    certifications: ['Company Certification'],
-    isActive: true
-  });
-}
 
 // Mock Tests
 const mockTests = [
@@ -501,8 +455,8 @@ const mockTests = [
       }
     },
     proctoring: {
-      enableWebcam: true,
-      enableScreenRecording: true,
+      enableWebcam: false,
+      enableScreenRecording: false,
       enableTabSwitchDetection: true,
       enableFullscreen: true,
       allowCopyPaste: false,
@@ -678,8 +632,8 @@ const mockTests = [
       }
     ],
     proctoring: {
-      enableWebcam: true,
-      enableScreenRecording: true,
+      enableWebcam: false,
+      enableScreenRecording: false,
       enableTabSwitchDetection: true,
       enableFullscreen: true,
       allowCopyPaste: false,

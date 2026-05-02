@@ -32,10 +32,12 @@ import AdminStudents from './pages/admin/Students';
 import AdminTracking from './pages/admin/Tracking';
 import AdminStatistics from './pages/admin/Statistics';
 import TestCreator from './pages/admin/TestCreator';
+import ReportGenerator from './pages/admin/ReportGenerator';
+import CompanyBranchManager from './pages/admin/CompanyBranchManager';
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <div className="min-h-screen bg-gray-50">
           <Routes>
@@ -76,6 +78,8 @@ function App() {
               <Route path="tracking" element={<AdminTracking />} />
               <Route path="statistics" element={<AdminStatistics />} />
               <Route path="test-creator" element={<TestCreator />} />
+              <Route path="report-generator" element={<ReportGenerator />} />
+              <Route path="company-branch-manager" element={<CompanyBranchManager />} />
             </Route>
             
             {/* 404 Route */}

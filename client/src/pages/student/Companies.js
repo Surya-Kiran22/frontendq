@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { mockCompanyService } from '../../services/mockData';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   BuildingOfficeIcon,
   MapPinIcon,
@@ -11,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const Companies = () => {
+  const { user } = useAuth();
   const [companies, setCompanies] = useState([]);
   const [visitedCompanies, setVisitedCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,8 +28,16 @@ const Companies = () => {
     try {
       // Use mock data instead of API calls
       const companiesData = await mockCompanyService.getAllCompanies();
+      
+      // Filter companies based on user's department
+      const userDepartment = user?.department || 'CSE'; // Default to CSE if no department
+      const filteredCompanies = companiesData.filter(company => {
+        // Check if user's department is in company's eligibility departments
+        return company.eligibility?.departments?.includes(userDepartment);
+      });
+      
       // Add mock visit dates and additional data
-      const enhancedCompanies = companiesData.map((company, index) => ({
+      const enhancedCompanies = filteredCompanies.map((company, index) => ({
         ...company,
         visitDate: company.visitDate || new Date(Date.now() + (index + 1) * 7 * 86400000).toISOString(),
         intake: company.intake || 100 + Math.floor(Math.random() * 200),
