@@ -43,6 +43,15 @@ const Register = () => {
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [otpErrors, setOtpErrors] = useState({});
   const [resendTimer, setResendTimer] = useState({ email: 0, phone: 0 });
+  
+  // Per-button loading states for instant feedback
+  const [buttonLoading, setButtonLoading] = useState({
+    sendEmail: false,
+    verifyEmail: false,
+    sendPhone: false,
+    verifyPhone: false,
+    submit: false
+  });
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -117,12 +126,18 @@ const Register = () => {
       toast.error('Please enter your email first');
       return;
     }
-    setLoading(true);
-    const result = await otpService.sendEmailOTP(formData.email);
-    setLoading(false);
-    if (result.success) {
-      setResendTimer(prev => ({ ...prev, email: 60 }));
-      startResendTimer('email');
+    setButtonLoading(prev => ({ ...prev, sendEmail: true }));
+    try {
+      const result = await otpService.sendEmailOTP(formData.email);
+      if (result.success) {
+        toast.success('OTP sent successfully!');
+        setResendTimer(prev => ({ ...prev, email: 60 }));
+        startResendTimer('email');
+      }
+    } catch (error) {
+      toast.error('Failed to send OTP');
+    } finally {
+      setButtonLoading(prev => ({ ...prev, sendEmail: false }));
     }
   };
 
@@ -131,12 +146,18 @@ const Register = () => {
       toast.error('Please enter your phone number first');
       return;
     }
-    setLoading(true);
-    const result = await otpService.sendPhoneOTP(formData.phoneNumber);
-    setLoading(false);
-    if (result.success) {
-      setResendTimer(prev => ({ ...prev, phone: 60 }));
-      startResendTimer('phone');
+    setButtonLoading(prev => ({ ...prev, sendPhone: true }));
+    try {
+      const result = await otpService.sendPhoneOTP(formData.phoneNumber);
+      if (result.success) {
+        toast.success('OTP sent successfully!');
+        setResendTimer(prev => ({ ...prev, phone: 60 }));
+        startResendTimer('phone');
+      }
+    } catch (error) {
+      toast.error('Failed to send OTP');
+    } finally {
+      setButtonLoading(prev => ({ ...prev, sendPhone: false }));
     }
   };
 
@@ -157,20 +178,25 @@ const Register = () => {
       setOtpErrors({ email: 'Please enter valid 6-digit OTP' });
       return;
     }
-    setLoading(true);
-    const result = await otpService.verifyEmailOTP(formData.email, emailOTP);
-    setLoading(false);
-    
-    if (result.success) {
-      toast.success('Email verified successfully!');
-      setOtpErrors({});
-      if (phoneVerified) {
-        completeRegistration();
+    setButtonLoading(prev => ({ ...prev, verifyEmail: true }));
+    try {
+      const result = await otpService.verifyEmailOTP(formData.email, emailOTP);
+      
+      if (result.success) {
+        toast.success('Email verified successfully!');
+        setOtpErrors({});
+        if (phoneVerified) {
+          completeRegistration();
+        } else {
+          setStep(3);
+        }
       } else {
-        setStep(3);
+        setOtpErrors({ email: result.message });
       }
-    } else {
-      setOtpErrors({ email: result.message });
+    } catch (error) {
+      setOtpErrors({ email: 'Verification failed. Please try again.' });
+    } finally {
+      setButtonLoading(prev => ({ ...prev, verifyEmail: false }));
     }
   };
 
@@ -179,17 +205,22 @@ const Register = () => {
       setOtpErrors({ phone: 'Please enter valid 6-digit OTP' });
       return;
     }
-    setLoading(true);
-    const result = await otpService.verifyPhoneOTP(formData.phoneNumber, phoneOTP);
-    setLoading(false);
-    
-    if (result.success) {
-      setPhoneVerified(true);
-      toast.success('Phone verified successfully!');
-      setOtpErrors({});
-      completeRegistration();
-    } else {
-      setOtpErrors({ phone: result.message });
+    setButtonLoading(prev => ({ ...prev, verifyPhone: true }));
+    try {
+      const result = await otpService.verifyPhoneOTP(formData.phoneNumber, phoneOTP);
+      
+      if (result.success) {
+        setPhoneVerified(true);
+        toast.success('Phone verified successfully!');
+        setOtpErrors({});
+        completeRegistration();
+      } else {
+        setOtpErrors({ phone: result.message });
+      }
+    } catch (error) {
+      setOtpErrors({ phone: 'Verification failed. Please try again.' });
+    } finally {
+      setButtonLoading(prev => ({ ...prev, verifyPhone: false }));
     }
   };
 
@@ -212,9 +243,11 @@ const Register = () => {
       return;
     }
     
+    setButtonLoading(prev => ({ ...prev, submit: true }));
     setStep(2);
     // Auto-send email OTP when moving to step 2
     await handleSendEmailOTP();
+    setButtonLoading(prev => ({ ...prev, submit: false }));
   };
 
   // Render Step 1: Registration Form
@@ -337,10 +370,10 @@ const Register = () => {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={buttonLoading.submit}
         className="w-full py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-purple-300/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
       >
-        {loading ? (
+        {buttonLoading.submit ? (
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
             Processing...
@@ -393,10 +426,10 @@ const Register = () => {
 
         <button
           onClick={handleVerifyEmailOTP}
-          disabled={loading || emailOTP.length !== 6}
+          disabled={buttonLoading.verifyEmail || emailOTP.length !== 6}
           className="w-full py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-purple-300/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
         >
-          {loading ? (
+          {buttonLoading.verifyEmail ? (
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
               Verifying...
@@ -415,10 +448,10 @@ const Register = () => {
           ) : (
             <button
               onClick={handleSendEmailOTP}
-              disabled={loading}
-              className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+              disabled={buttonLoading.sendEmail}
+              className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50"
             >
-              Resend Email OTP
+              {buttonLoading.sendEmail ? 'Sending...' : 'Resend Email OTP'}
             </button>
           )}
         </div>
@@ -472,10 +505,10 @@ const Register = () => {
 
         <button
           onClick={handleVerifyPhoneOTP}
-          disabled={loading || phoneOTP.length !== 6}
+          disabled={buttonLoading.verifyPhone || phoneOTP.length !== 6}
           className="w-full py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-emerald-300/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
         >
-          {loading ? (
+          {buttonLoading.verifyPhone ? (
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
               Verifying...
@@ -494,10 +527,10 @@ const Register = () => {
           ) : (
             <button
               onClick={handleSendPhoneOTP}
-              disabled={loading}
-              className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+              disabled={buttonLoading.sendPhone}
+              className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:opacity-50"
             >
-              Resend Phone OTP
+              {buttonLoading.sendPhone ? 'Sending...' : 'Resend Phone OTP'}
             </button>
           )}
         </div>
