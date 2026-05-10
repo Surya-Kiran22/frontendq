@@ -40,7 +40,6 @@ const Register = () => {
   // OTP States
   const [emailOTP, setEmailOTP] = useState('');
   const [phoneOTP, setPhoneOTP] = useState('');
-  const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [otpErrors, setOtpErrors] = useState({});
   const [resendTimer, setResendTimer] = useState({ email: 0, phone: 0 });
@@ -163,7 +162,6 @@ const Register = () => {
     setLoading(false);
     
     if (result.success) {
-      setEmailVerified(true);
       toast.success('Email verified successfully!');
       setOtpErrors({});
       if (phoneVerified) {
