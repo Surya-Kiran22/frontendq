@@ -21,7 +21,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, demoLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -148,29 +148,40 @@ const Login = () => {
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-indigo-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Signing in...
-                </div>
-              ) : (
-                <span className="flex items-center justify-center">
-                  Sign in
-                  <ArrowRightIcon className="h-5 w-5 ml-2" />
-                </span>
-              )}
-            </button>
+            <div className="mt-4 flex flex-col sm:flex-row gap-3">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-indigo-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  <span className="flex items-center justify-center">
+                    <ArrowRightIcon className="h-5 w-5" />
+                    Sign In
+                  </span>
+                )}
+              </button>
 
-            <div className="text-center">
-              <p className="text-sm text-slate-600">
+              {/* Demo Login Button */}
+              <button
+                type="button"
+                onClick={demoLogin}
+                className="w-full py-2 bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200"
+              >
+                🎭 Demo Mode
+              </button>
+            </div>
+
+            <div className="mt-6 text-center">
+              <p className="text-slate-600">
                 Don't have an account?{' '}
-                <Link to="/register" className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
-                  Register here →
+                <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
+                  Register here
                 </Link>
               </p>
             </div>

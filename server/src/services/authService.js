@@ -19,6 +19,23 @@ export const authService = {
     return response;
   },
 
+  // Demo mode functions
+  demoLogin: async () => {
+    const response = await api.post('/auth/login', { 
+      rollNumber: '12345', 
+      password: 'demo123' 
+    });
+    if (response.success) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+    }
+    return response;
+  },
+
+  isDemoMode: () => {
+    return process.env.DEMO_MODE === 'true';
+  },
+
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

@@ -32,20 +32,23 @@ const register = async (req, res) => {
 
     res.status(201).json({
       success: true,
+      message: 'User registered successfully',
       token,
       user: {
-        _id: user._id,
+        id: user._id,
         name: user.name,
         email: user.email,
         rollNumber: user.rollNumber,
-        role: user.role,
         department: user.department,
         year: user.year,
-        isAdmin: user.isAdmin,
-      },
+        cgpa: user.cgpa,
+        role: user.role,
+        isAdmin: user.isAdmin
+      }
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Registration error:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 

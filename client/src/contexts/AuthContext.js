@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { authService } from '../services/authService';
 import { authService } from '../services/authService';
 
 // Auth Context
@@ -105,11 +105,33 @@ export const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: response.user, token: response.token },
       });
-
       toast.success(`Welcome back, ${response.user.name}!`);
       return { success: true, user: response.user };
     } catch (error) {
       const errorMessage = error.message || 'Login failed';
+      dispatch({
+        type: 'LOGIN_FAILURE',
+        payload: errorMessage,
+      });
+      toast.error(errorMessage);
+      return { success: false, error: errorMessage };
+    }
+  };
+
+  // Demo login function
+  const demoLogin = async () => {
+    dispatch({ type: 'LOGIN_START' });
+    try {
+      const response = await authService.demoLogin();
+
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: response.user, token: response.token },
+      });
+      toast.success('Welcome to Demo Mode!');
+      return { success: true, user: response.user };
+    } catch (error) {
+      const errorMessage = error.message || 'Demo login failed';
       dispatch({
         type: 'LOGIN_FAILURE',
         payload: errorMessage,
@@ -161,6 +183,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     ...state,
     login,
+    demoLogin,
     register,
     logout,
     updateUser,
