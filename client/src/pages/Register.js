@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { otpService } from '../services/otpService';
@@ -19,6 +19,19 @@ import {
   ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+
+// Debounce utility function
+const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
 
 const Register = () => {
   const [step, setStep] = useState(1); // 1: Form, 2: Email OTP, 3: Phone OTP, 4: Success
@@ -59,6 +72,44 @@ const Register = () => {
   const branches = ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT'];
   const years = ['1st', '2nd', '3rd', '4th'];
 
+  // Debounced validation for instant feedback
+  const validateField = useCallback(debounce((name, value) => {
+    const newErrors = {};
+    
+    if (name === 'rollNumber' && value) {
+      const rollNumberRegex = /^[0-9]{5}[A-Z][0-9]{2}[A-Z][0-9]$/;
+      if (!rollNumberRegex.test(value)) {
+        newErrors.rollNumber = 'Invalid format (e.g., 23761A05M9)';
+      }
+    }
+    
+    if (name === 'email' && value) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        newErrors.email = 'Invalid email format';
+      }
+    }
+    
+    if (name === 'phoneNumber' && value) {
+      if (!/^\d{10}$/.test(value)) {
+        newErrors.phoneNumber = 'Phone number must be 10 digits';
+      }
+    }
+    
+    if (name === 'password' && value) {
+      if (value.length < 6) {
+        newErrors.password = 'Password must be at least 6 characters';
+      }
+    }
+    
+    if (name === 'confirmPassword' && value && formData.password) {
+      if (value !== formData.password) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
+    }
+    
+    setErrors(prev => ({ ...prev, ...newErrors }));
+  }, 300), [formData.password]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -66,9 +117,13 @@ const Register = () => {
       [name]: value
     }));
     
+    // Clear error immediately for instant feedback
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
+    
+    // Debounced validation
+    validateField(name, value);
   };
 
   const validateForm = () => {
