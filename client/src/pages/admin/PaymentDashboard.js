@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { paymentService } from '../../services/paymentService';
 import { 
-  CreditCardIcon,
-  CalendarIcon,
-  CheckCircleIcon,
+  BuildingOfficeIcon,
+  DocumentTextIcon,
+  AcademicCapIcon,
   ClockIcon,
-  XCircleIcon,
-  BanknotesIcon,
-  UserIcon,
-  FunnelIcon,
-  ArrowPathIcon
+  CheckCircleIcon,
+  BriefcaseIcon,
+  ArrowPathIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -22,7 +21,7 @@ const PaymentDashboard = () => {
 
   useEffect(() => {
     fetchData();
-  }, [filter, page]);
+  }, [filter, page, fetchData]);
 
   const fetchData = async () => {
     try {

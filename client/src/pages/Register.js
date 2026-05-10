@@ -48,7 +48,6 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   
   // OTP States
   const [emailOTP, setEmailOTP] = useState('');
@@ -72,43 +71,53 @@ const Register = () => {
   const branches = ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT'];
   const years = ['1st', '2nd', '3rd', '4th'];
 
-  // Debounced validation for instant feedback
-  const validateField = useCallback(debounce((name, value) => {
-    const newErrors = {};
+  // Simple validation for instant feedback
+  const validateField = (name, value) => {
+    const newErrors = { ...otpErrors };
     
     if (name === 'rollNumber' && value) {
       const rollNumberRegex = /^[0-9]{5}[A-Z][0-9]{2}[A-Z][0-9]$/;
       if (!rollNumberRegex.test(value)) {
         newErrors.rollNumber = 'Invalid format (e.g., 23761A05M9)';
+      } else {
+        delete newErrors.rollNumber;
       }
     }
     
     if (name === 'email' && value) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         newErrors.email = 'Invalid email format';
+      } else {
+        delete newErrors.email;
       }
     }
     
     if (name === 'phoneNumber' && value) {
       if (!/^\d{10}$/.test(value)) {
         newErrors.phoneNumber = 'Phone number must be 10 digits';
+      } else {
+        delete newErrors.phoneNumber;
       }
     }
     
     if (name === 'password' && value) {
       if (value.length < 6) {
         newErrors.password = 'Password must be at least 6 characters';
+      } else {
+        delete newErrors.password;
       }
     }
     
-    if (name === 'confirmPassword' && value && formData.password) {
+    if (name === 'confirmPassword' && value) {
       if (value !== formData.password) {
         newErrors.confirmPassword = 'Passwords do not match';
+      } else {
+        delete newErrors.confirmPassword;
       }
     }
     
-    setErrors(prev => ({ ...prev, ...newErrors }));
-  }, 300), [formData.password]);
+    setOtpErrors(newErrors);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

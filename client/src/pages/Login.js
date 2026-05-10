@@ -4,7 +4,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { 
   EyeIcon, 
   EyeSlashIcon, 
-  AcademicCapIcon, 
   UserIcon, 
   LockClosedIcon, 
   SparklesIcon,

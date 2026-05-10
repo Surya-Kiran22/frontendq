@@ -5,14 +5,11 @@ import {
   BuildingOfficeIcon,
   ChartBarIcon,
   UsersIcon,
-  DocumentTextIcon,
-  ClockIcon,
   CheckCircleIcon,
   ArrowRightIcon,
   SparklesIcon,
   RocketLaunchIcon,
-  ShieldCheckIcon,
-  CurrencyDollarIcon
+  ShieldCheckIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 

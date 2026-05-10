@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { companyService } from '../services/companyService';
 import {
-  HomeIcon,
   BuildingOfficeIcon,
-  UserIcon,
   DocumentTextIcon,
-  ChartBarIcon,
-  UsersIcon,
   AcademicCapIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  BriefcaseIcon,
+  UserIcon,
+  CreditCardIcon,
+  Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
-  Bars3Icon,
-  XMarkIcon,
-  ClipboardDocumentListIcon,
-  SparklesIcon,
-  CreditCardIcon
+  HomeIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 
 const Layout = () => {

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Navigation from './ui/Navigation';
-import { designTokens } from '../styles/designSystem';
 
 const CustomLayout = () => {
   const { user } = useAuth();
@@ -15,10 +14,6 @@ const CustomLayout = () => {
   const handleLogout = () => {
     // This would be handled by AuthContext
     window.location.href = '/login';
-  };
-
-  const isActive = (path) => {
-    return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
   return (
