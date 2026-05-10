@@ -25,6 +25,7 @@ import ResumeAnalyzer from './pages/student/ResumeAnalyzer';
 import Compiler from './pages/student/Compiler';
 import AIInterview from './pages/student/AIInterview';
 import TestResults from './pages/student/TestResults';
+import Payment from './pages/student/Payment';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
@@ -35,6 +36,7 @@ import AdminStatistics from './pages/admin/Statistics';
 import TestCreator from './pages/admin/TestCreator';
 import ReportGenerator from './pages/admin/ReportGenerator';
 import CompanyBranchManager from './pages/admin/CompanyBranchManager';
+import PaymentDashboard from './pages/admin/PaymentDashboard';
 
 function App() {
   return (
@@ -65,6 +67,7 @@ function App() {
               <Route path="compiler" element={<Compiler />} />
               <Route path="ai-interview" element={<AIInterview />} />
               <Route path="test-results/:testId" element={<TestResults />} />
+              <Route path="payment" element={<Payment />} />
             </Route>
             
             {/* Protected Admin Routes */}
@@ -82,6 +85,7 @@ function App() {
               <Route path="test-creator" element={<TestCreator />} />
               <Route path="report-generator" element={<ReportGenerator />} />
               <Route path="company-branch-manager" element={<CompanyBranchManager />} />
+              <Route path="payments" element={<PaymentDashboard />} />
             </Route>
             
             {/* 404 Route */}

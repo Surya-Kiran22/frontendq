@@ -46,6 +46,7 @@ app.use('/api/compiler', require('./routes/compilerRoutes'));
 app.use('/api/ai-interview', require('./routes/aiInterviewRoutes'));
 app.use('/api/resume-analyzer', require('./routes/resumeAnalyzerRoutes'));
 app.use('/api/otp', require('./routes/otpRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -4,6 +4,7 @@ const User = require('./models/User');
 const Profile = require('./models/Profile');
 const Company = require('./models/Company');
 const Test = require('./models/Test');
+const Payment = require('./models/Payment');
 
 require('dotenv').config();
 
@@ -18,6 +19,7 @@ const seedData = async () => {
     await Profile.deleteMany({});
     await Company.deleteMany({});
     await Test.deleteMany({});
+    await Payment.deleteMany({});
     console.log('Cleared existing data');
 
     // Create admin user
@@ -267,6 +269,45 @@ const seedData = async () => {
 
     await Test.insertMany(tests);
     console.log('Created 2 sample tests');
+
+    // Create sample payment records
+    const payments = [];
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    
+    studentUsers.forEach((student, index) => {
+      // Create payment records for last 3 months
+      for (let i = 0; i < 3; i++) {
+        let month = currentMonth - i;
+        let year = currentYear;
+        
+        if (month <= 0) {
+          month += 12;
+          year -= 1;
+        }
+        
+        const status = i === 0 ? (index % 3 === 0 ? 'pending' : 'paid') : 'paid';
+        const paymentDate = status === 'paid' ? new Date(year, month - 1, 10) : null;
+        const dueDate = new Date(year, month, 5);
+        const transactionId = status === 'paid' ? `TXN${Date.now()}${index}${i}` : null;
+        
+        payments.push({
+          userId: student._id,
+          amount: 500,
+          status,
+          month,
+          year,
+          dueDate,
+          paymentDate,
+          transactionId,
+          paymentMethod: 'card',
+          description: 'Monthly subscription fee'
+        });
+      }
+    });
+    
+    await Payment.insertMany(payments);
+    console.log('Created payment records for students');
 
     console.log('Seed data completed successfully!');
     process.exit(0);
