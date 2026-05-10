@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { otpService } from '../services/otpService';
 import { 
   EyeIcon, 
   EyeSlashIcon, 
@@ -17,83 +18,6 @@ import {
   KeyIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
-
-// Mock OTP Service
-const mockOTPService = {
-  generatedOTPs: {},
-  
-  sendEmailOTP: async (email) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    mockOTPService.generatedOTPs[`email_${email}`] = {
-      otp,
-      timestamp: Date.now(),
-      attempts: 0
-    };
-    // OTP sent to backend
-    toast.success(`OTP sent to ${email}`);
-    return { success: true, message: 'OTP sent to email' };
-  },
-  
-  sendPhoneOTP: async (phone) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    mockOTPService.generatedOTPs[`phone_${phone}`] = {
-      otp,
-      timestamp: Date.now(),
-      attempts: 0
-    };
-    // OTP sent to backend
-    toast.success(`OTP sent to +91${phone}`);
-    return { success: true, message: 'OTP sent to phone' };
-  },
-  
-  verifyEmailOTP: async (email, otp) => {
-    const key = `email_${email}`;
-    const data = mockOTPService.generatedOTPs[key];
-    
-    if (!data) return { success: false, message: 'OTP expired. Please request again' };
-    if (Date.now() - data.timestamp > 600000) {
-      delete mockOTPService.generatedOTPs[key];
-      return { success: false, message: 'OTP expired. Please request again' };
-    }
-    if (data.otp !== otp) {
-      data.attempts++;
-      if (data.attempts >= 3) {
-        delete mockOTPService.generatedOTPs[key];
-        return { success: false, message: 'Too many failed attempts. Please request new OTP' };
-      }
-      return { success: false, message: 'Invalid OTP. Please try again' };
-    }
-    
-    delete mockOTPService.generatedOTPs[key];
-    return { success: true, message: 'Email verified successfully' };
-  },
-  
-  verifyPhoneOTP: async (phone, otp) => {
-    const key = `phone_${phone}`;
-    const data = mockOTPService.generatedOTPs[key];
-    
-    if (!data) return { success: false, message: 'OTP expired. Please request again' };
-    if (Date.now() - data.timestamp > 600000) {
-      delete mockOTPService.generatedOTPs[key];
-      return { success: false, message: 'OTP expired. Please request again' };
-    }
-    if (data.otp !== otp) {
-      data.attempts++;
-      if (data.attempts >= 3) {
-        delete mockOTPService.generatedOTPs[key];
-        return { success: false, message: 'Too many failed attempts. Please request new OTP' };
-      }
-      return { success: false, message: 'Invalid OTP. Please try again' };
-    }
-    
-    delete mockOTPService.generatedOTPs[key];
-    return { success: true, message: 'Phone verified successfully' };
-  }
-};
 
 const Register = () => {
   const [step, setStep] = useState(1); // 1: Form, 2: Email OTP, 3: Phone OTP, 4: Success
@@ -194,7 +118,7 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    const result = await mockOTPService.sendEmailOTP(formData.email);
+    const result = await otpService.sendEmailOTP(formData.email);
     setLoading(false);
     if (result.success) {
       setResendTimer(prev => ({ ...prev, email: 60 }));
@@ -208,7 +132,7 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    const result = await mockOTPService.sendPhoneOTP(formData.phoneNumber);
+    const result = await otpService.sendPhoneOTP(formData.phoneNumber);
     setLoading(false);
     if (result.success) {
       setResendTimer(prev => ({ ...prev, phone: 60 }));
@@ -234,7 +158,7 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    const result = await mockOTPService.verifyEmailOTP(formData.email, emailOTP);
+    const result = await otpService.verifyEmailOTP(formData.email, emailOTP);
     setLoading(false);
     
     if (result.success) {
@@ -257,7 +181,7 @@ const Register = () => {
       return;
     }
     setLoading(true);
-    const result = await mockOTPService.verifyPhoneOTP(formData.phoneNumber, phoneOTP);
+    const result = await otpService.verifyPhoneOTP(formData.phoneNumber, phoneOTP);
     setLoading(false);
     
     if (result.success) {
