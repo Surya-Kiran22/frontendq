@@ -1,5 +1,5 @@
 import React from 'react';
-import { designTokens } from '../../styles/designSystem';
+import { designTokens } from '../../styles/designSystemFixed';
 
 const Button = ({ 
   children, 

@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { companyService } from '../../services/companyService';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
-import { designTokens } from '../../styles/designSystem';
+import { designTokens } from '../../styles/designSystemFixed';
 
 const CustomDashboard = () => {
   const { user } = useAuth();

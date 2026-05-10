@@ -1,4 +1,4 @@
-// Custom Design System - Moving away from AI-generated templates
+// Fixed Custom Design System - Moving away from AI-generated templates
 export const designTokens = {
   colors: {
     primary: {
@@ -107,17 +107,17 @@ export const designTokens = {
   
   components: {
     button: {
-      base: 'px-6 py-3 font-medium rounded-lg transition-all duration-200',
+      base: 'px-6 py-3 font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
       variants: {
         primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-2 focus:ring-primary-500',
         secondary: 'bg-secondary-100 text-secondary-900 hover:bg-secondary-200 focus:ring-2 focus:ring-secondary-500',
-        outline: 'border-2 border-secondary-300 text-secondary-700 hover:bg-secondary-50 focus:ring-2 focus:ring-secondary-500',
-        ghost: 'text-secondary-600 hover:text-secondary-800 hover:bg-secondary-100',
+        outline: 'border-2 border-neutral-300 bg-white text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 hover:border-neutral-400 focus:ring-neutral-500 focus:ring-neutral-300',
+        ghost: 'text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 transition-colors',
         danger: 'bg-error-500 text-white hover:bg-error-600 focus:ring-2 focus:ring-error-400'
       }
     },
     input: {
-      base: 'px-4 py-3 border-2 border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white',
+      base: 'block w-full px-4 py-3 border-2 border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white transition-all duration-200',
       error: 'border-2 border-error-300 bg-error-50 focus:ring-2 focus:ring-error-500 focus:border-error-500'
     },
     card: {
@@ -139,7 +139,7 @@ export const customClasses = {
   // Custom gradients
   'gradient-primary': 'bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700',
   'gradient-secondary': 'bg-gradient-to-br from-secondary-500 via-secondary-600 to-secondary-700',
-    
+  
   // Custom effects
   'glass': 'bg-white/80 backdrop-blur-xl border border-white/20',
   'glow': 'shadow-lg shadow-primary/20',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { designTokens } from '../../styles/designSystem';
+import { designTokens } from '../../styles/designSystemFixed';
 
 const Navigation = () => {
   const { user } = useAuth();
@@ -124,9 +124,8 @@ const Navigation = () => {
       {/* Footer */}
       <div className="p-4 border-t border-neutral-700">
         <div className="text-center text-neutral-400 text-sm">
-          © 2024 PlacePro Platform
+          &copy;&copy; 2024 PlacePro Platform
         </div>
-      </div>
       </div>
     </nav>
   );
