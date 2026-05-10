@@ -8,13 +8,15 @@ import CodeProtection from './components/CodeProtection';
 
 // Layout Components
 import Layout from './components/Layout';
+import CustomLayout from './components/CustomLayout';
 
 // Auth Components
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Home from './pages/Home';
 
 // Student Pages
-import Dashboard from './pages/student/Dashboard';
+import CustomDashboard from './pages/student/CustomDashboard';
 import Companies from './pages/student/Companies';
 import CompanyDetail from './pages/student/CompanyDetail';
 import Profile from './pages/student/Profile';
@@ -46,17 +48,18 @@ function App() {
         <div className="min-h-screen bg-gray-50">
           <Routes>
             {/* Public Routes */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
             {/* Protected Student Routes */}
             <Route path="/" element={
               <ProtectedRoute>
-                <Layout />
+                <CustomLayout />
               </ProtectedRoute>
             }>
               <Route index element={<Navigate to="/dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="dashboard" element={<CustomDashboard />} />
               <Route path="companies" element={<Companies />} />
               <Route path="companies/:id" element={<CompanyDetail />} />
               <Route path="profile" element={<Profile />} />
