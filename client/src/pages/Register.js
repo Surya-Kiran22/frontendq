@@ -5,7 +5,6 @@ import { otpService } from '../services/otpService';
 import { 
   EyeIcon, 
   EyeSlashIcon, 
-  AcademicCapIcon, 
   UserIcon, 
   EnvelopeIcon, 
   PhoneIcon, 
@@ -15,7 +14,9 @@ import {
   CheckCircleIcon,
   ArrowRightIcon,
   ShieldCheckIcon,
-  KeyIcon
+  KeyIcon,
+  SparklesIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -220,63 +221,41 @@ const Register = () => {
 
   // Render Step 1: Registration Form
   const renderStep1 = () => (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="label flex items-center">
-            <UserIcon className="h-4 w-4 mr-2 text-blue-500" />
-            Roll Number *
-          </label>
-          <input
-            name="rollNumber"
-            type="text"
-            value={formData.rollNumber}
-            onChange={handleChange}
-            className={`input ${errors.rollNumber ? 'input-error' : ''}`}
-            placeholder="e.g., 23761A05M9"
-          />
-          {errors.rollNumber && <p className="mt-1 text-sm text-red-600">{errors.rollNumber}</p>}
-        </div>
+    <form className="space-y-5" onSubmit={handleSubmit}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {[
+          { name: 'rollNumber', label: 'Roll Number', icon: UserIcon, placeholder: 'e.g., 23761A05M9' },
+          { name: 'name', label: 'Full Name', icon: UserIcon, placeholder: 'John Doe' },
+          { name: 'email', label: 'Email Address', icon: EnvelopeIcon, placeholder: 'john@example.com', type: 'email' },
+        ].map((field) => (
+          <div key={field.name} className="group">
+            <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+              <field.icon className="h-4 w-4 mr-2 text-indigo-500 group-hover:text-purple-500 transition-colors" />
+              {field.label} *
+            </label>
+            <input
+              name={field.name}
+              type={field.type || 'text'}
+              value={formData[field.name]}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                errors[field.name] 
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200 bg-rose-50' 
+                  : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200 bg-white/50 hover:bg-white'
+              }`}
+              placeholder={field.placeholder}
+            />
+            {errors[field.name] && <p className="mt-1 text-sm text-rose-600">{errors[field.name]}</p>}
+          </div>
+        ))}
 
-        <div>
-          <label className="label flex items-center">
-            <UserIcon className="h-4 w-4 mr-2 text-blue-500" />
-            Full Name *
-          </label>
-          <input
-            name="name"
-            type="text"
-            value={formData.name}
-            onChange={handleChange}
-            className={`input ${errors.name ? 'input-error' : ''}`}
-            placeholder="John Doe"
-          />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-        </div>
-
-        <div>
-          <label className="label flex items-center">
-            <EnvelopeIcon className="h-4 w-4 mr-2 text-blue-500" />
-            Email Address *
-          </label>
-          <input
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`input ${errors.email ? 'input-error' : ''}`}
-            placeholder="john@example.com"
-          />
-          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-        </div>
-
-        <div>
-          <label className="label flex items-center">
-            <PhoneIcon className="h-4 w-4 mr-2 text-blue-500" />
+        <div className="group">
+          <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+            <PhoneIcon className="h-4 w-4 mr-2 text-indigo-500 group-hover:text-purple-500 transition-colors" />
             Phone Number *
           </label>
           <div className="flex">
-            <span className="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-500 text-sm">
+            <span className="inline-flex items-center px-4 bg-gradient-to-r from-indigo-100 to-purple-100 border-2 border-r-0 border-slate-200 rounded-l-xl text-slate-600 text-sm font-medium">
               +91
             </span>
             <input
@@ -284,114 +263,84 @@ const Register = () => {
               type="tel"
               value={formData.phoneNumber}
               onChange={handleChange}
-              className={`input rounded-l-none ${errors.phoneNumber ? 'input-error' : ''}`}
+              className={`flex-1 px-4 py-3 rounded-r-xl border-2 border-l-0 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                errors.phoneNumber 
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200 bg-rose-50' 
+                  : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200 bg-white/50 hover:bg-white'
+              }`}
               placeholder="1234567890"
             />
           </div>
-          {errors.phoneNumber && <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>}
+          {errors.phoneNumber && <p className="mt-1 text-sm text-rose-600">{errors.phoneNumber}</p>}
         </div>
 
-        <div>
-          <label className="label flex items-center">
-            <BuildingLibraryIcon className="h-4 w-4 mr-2 text-blue-500" />
-            Branch *
-          </label>
-          <select
-            name="branch"
-            value={formData.branch}
-            onChange={handleChange}
-            className={`input ${errors.branch ? 'input-error' : ''}`}
-          >
-            <option value="">Select Branch</option>
-            {branches.map(branch => (
-              <option key={branch} value={branch}>{branch}</option>
-            ))}
-          </select>
-          {errors.branch && <p className="mt-1 text-sm text-red-600">{errors.branch}</p>}
-        </div>
-
-        <div>
-          <label className="label flex items-center">
-            <CalendarIcon className="h-4 w-4 mr-2 text-blue-500" />
-            Year *
-          </label>
-          <select
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            className={`input ${errors.year ? 'input-error' : ''}`}
-          >
-            <option value="">Select Year</option>
-            {years.map(year => (
-              <option key={year} value={year}>{year} Year</option>
-            ))}
-          </select>
-          {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
-        </div>
-
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center">
-            <LockClosedIcon className="h-4 w-4 mr-2 text-indigo-500" />
-            Password *
-          </label>
-          <div className="relative">
-            <input
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              value={formData.password}
+        {[
+          { name: 'branch', label: 'Branch', icon: BuildingLibraryIcon, options: branches },
+          { name: 'year', label: 'Year', icon: CalendarIcon, options: years, suffix: ' Year' },
+        ].map((field) => (
+          <div key={field.name} className="group">
+            <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+              <field.icon className="h-4 w-4 mr-2 text-indigo-500 group-hover:text-purple-500 transition-colors" />
+              {field.label} *
+            </label>
+            <select
+              name={field.name}
+              value={formData[field.name]}
               onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-xl border-2 pr-12 transition-all duration-200 focus:outline-none focus:ring-2 ${
-                errors.password 
-                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200' 
-                  : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200'
+              className={`w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                errors[field.name] 
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200 bg-rose-50' 
+                  : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200 bg-white/50 hover:bg-white'
               }`}
-              placeholder="Min 6 characters"
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
-              onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
-            </button>
+              <option value="">Select {field.label}</option>
+              {field.options.map(opt => (
+                <option key={opt} value={opt}>{opt}{field.suffix || ''}</option>
+              ))}
+            </select>
+            {errors[field.name] && <p className="mt-1 text-sm text-rose-600">{errors[field.name]}</p>}
           </div>
-          {errors.password && <p className="mt-1 text-sm text-rose-600">{errors.password}</p>}
-        </div>
+        ))}
 
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center">
-            <LockClosedIcon className="h-4 w-4 mr-2 text-indigo-500" />
-            Confirm Password *
-          </label>
-          <div className="relative">
-            <input
-              name="confirmPassword"
-              type={showConfirmPassword ? 'text' : 'password'}
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 rounded-xl border-2 pr-12 transition-all duration-200 focus:outline-none focus:ring-2 ${
-                errors.confirmPassword 
-                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200' 
-                  : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200'
-              }`}
-              placeholder="Confirm password"
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            >
-              {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
-            </button>
+        {[
+          { name: 'password', label: 'Password', placeholder: 'Min 6 characters' },
+          { name: 'confirmPassword', label: 'Confirm Password', placeholder: 'Confirm password' },
+        ].map((field) => (
+          <div key={field.name} className="group">
+            <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+              <LockClosedIcon className="h-4 w-4 mr-2 text-indigo-500 group-hover:text-purple-500 transition-colors" />
+              {field.label} *
+            </label>
+            <div className="relative">
+              <input
+                name={field.name}
+                type={field.name === 'password' ? (showPassword ? 'text' : 'password') : (showConfirmPassword ? 'text' : 'password')}
+                value={formData[field.name]}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 rounded-xl border-2 pr-12 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                  errors[field.name] 
+                    ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200 bg-rose-50' 
+                    : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200 bg-white/50 hover:bg-white'
+                }`}
+                placeholder={field.placeholder}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-600 transition-colors"
+                onClick={() => field.name === 'password' ? setShowPassword(!showPassword) : setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {field.name === 'password' ? (showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />) : (showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />)}
+              </button>
+            </div>
+            {errors[field.name] && <p className="mt-1 text-sm text-rose-600">{errors[field.name]}</p>}
           </div>
-          {errors.confirmPassword && <p className="mt-1 text-sm text-rose-600">{errors.confirmPassword}</p>}
-        </div>
+        ))}
       </div>
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-indigo-200 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        className="w-full py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-purple-300/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
       >
         {loading ? (
           <div className="flex items-center justify-center">
@@ -405,15 +354,6 @@ const Register = () => {
           </span>
         )}
       </button>
-
-      <div className="text-center">
-        <p className="text-sm text-slate-600">
-          Already have an account?{' '}
-          <Link to="/login" className="font-bold text-indigo-600 hover:text-indigo-700">
-            Sign in here →
-          </Link>
-        </p>
-      </div>
     </form>
   );
 
@@ -421,36 +361,42 @@ const Register = () => {
   const renderStep2 = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="mx-auto h-16 w-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full flex items-center justify-center mb-4">
-          <EnvelopeIcon className="h-8 w-8 text-blue-600" />
+        <div className="mx-auto h-20 w-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-indigo-200 animate-pulse">
+          <EnvelopeIcon className="h-10 w-10 text-indigo-600" />
         </div>
-        <h3 className="text-xl font-bold text-slate-800">Verify Your Email</h3>
-        <p className="mt-2 text-sm text-slate-600">
-          We've sent a 6-digit OTP to <span className="font-bold text-slate-800">{formData.email}</span>
+        <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-700 to-purple-700 bg-clip-text text-transparent">
+          Verify Your Email
+        </h3>
+        <p className="mt-3 text-base text-slate-600">
+          We've sent a 6-digit OTP to <span className="font-bold text-slate-800 bg-gradient-to-r from-indigo-100 to-purple-100 px-2 py-1 rounded-lg">{formData.email}</span>
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div>
-          <label className="label flex items-center">
-            <KeyIcon className="h-4 w-4 mr-2 text-blue-500" />
+          <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+            <KeyIcon className="h-4 w-4 mr-2 text-indigo-500" />
             Enter Email OTP
           </label>
           <input
             type="text"
             value={emailOTP}
             onChange={(e) => setEmailOTP(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className={`input text-center text-2xl tracking-widest ${otpErrors.email ? 'input-error' : ''}`}
+            className={`w-full px-4 py-4 text-center text-3xl tracking-[0.5em] rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 font-mono ${
+              otpErrors.email 
+                ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200 bg-rose-50' 
+                : 'border-slate-200 focus:border-indigo-500 focus:ring-indigo-200 bg-white/50 hover:bg-white'
+            }`}
             placeholder="000000"
             maxLength={6}
           />
-          {otpErrors.email && <p className="mt-1 text-sm text-red-600">{otpErrors.email}</p>}
+          {otpErrors.email && <p className="mt-2 text-sm text-rose-600 font-medium">{otpErrors.email}</p>}
         </div>
 
         <button
           onClick={handleVerifyEmailOTP}
           disabled={loading || emailOTP.length !== 6}
-          className="btn-primary w-full py-3"
+          className="w-full py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-purple-300/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
         >
           {loading ? (
             <div className="flex items-center justify-center">
@@ -467,12 +413,12 @@ const Register = () => {
 
         <div className="text-center">
           {resendTimer.email > 0 ? (
-            <p className="text-sm text-gray-500">Resend OTP in {resendTimer.email}s</p>
+            <p className="text-sm text-slate-500">Resend OTP in <span className="font-bold text-indigo-600">{resendTimer.email}s</span></p>
           ) : (
             <button
               onClick={handleSendEmailOTP}
               disabled={loading}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
             >
               Resend Email OTP
             </button>
@@ -481,9 +427,10 @@ const Register = () => {
 
         <button
           onClick={() => setStep(1)}
-          className="w-full text-sm text-gray-500 hover:text-gray-700"
+          className="w-full text-sm text-slate-500 hover:text-slate-700 font-medium flex items-center justify-center transition-colors"
         >
-          ← Back to Registration
+          <ArrowLeftIcon className="h-4 w-4 mr-1" />
+          Back to Registration
         </button>
       </div>
     </div>
@@ -493,36 +440,42 @@ const Register = () => {
   const renderStep3 = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-          <PhoneIcon className="h-8 w-8 text-green-600" />
+        <div className="mx-auto h-20 w-20 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-emerald-200 animate-pulse">
+          <PhoneIcon className="h-10 w-10 text-emerald-600" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-900">Verify Your Phone</h3>
-        <p className="mt-2 text-sm text-gray-600">
-          We've sent a 6-digit OTP to <span className="font-semibold">+91 {formData.phoneNumber}</span>
+        <h3 className="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent">
+          Verify Your Phone
+        </h3>
+        <p className="mt-3 text-base text-slate-600">
+          We've sent a 6-digit OTP to <span className="font-bold text-slate-800 bg-gradient-to-r from-emerald-100 to-teal-100 px-2 py-1 rounded-lg">+91 {formData.phoneNumber}</span>
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div>
-          <label className="label flex items-center">
-            <KeyIcon className="h-4 w-4 mr-2 text-blue-500" />
+          <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+            <KeyIcon className="h-4 w-4 mr-2 text-emerald-500" />
             Enter Phone OTP
           </label>
           <input
             type="text"
             value={phoneOTP}
             onChange={(e) => setPhoneOTP(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            className={`input text-center text-2xl tracking-widest ${otpErrors.phone ? 'input-error' : ''}`}
+            className={`w-full px-4 py-4 text-center text-3xl tracking-[0.5em] rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 font-mono ${
+              otpErrors.phone 
+                ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-200 bg-rose-50' 
+                : 'border-slate-200 focus:border-emerald-500 focus:ring-emerald-200 bg-white/50 hover:bg-white'
+            }`}
             placeholder="000000"
             maxLength={6}
           />
-          {otpErrors.phone && <p className="mt-1 text-sm text-red-600">{otpErrors.phone}</p>}
+          {otpErrors.phone && <p className="mt-2 text-sm text-rose-600 font-medium">{otpErrors.phone}</p>}
         </div>
 
         <button
           onClick={handleVerifyPhoneOTP}
           disabled={loading || phoneOTP.length !== 6}
-          className="btn-primary w-full py-3"
+          className="w-full py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white font-bold rounded-xl hover:shadow-xl hover:shadow-emerald-300/50 transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:scale-100"
         >
           {loading ? (
             <div className="flex items-center justify-center">
@@ -539,12 +492,12 @@ const Register = () => {
 
         <div className="text-center">
           {resendTimer.phone > 0 ? (
-            <p className="text-sm text-gray-500">Resend OTP in {resendTimer.phone}s</p>
+            <p className="text-sm text-slate-500">Resend OTP in <span className="font-bold text-emerald-600">{resendTimer.phone}s</span></p>
           ) : (
             <button
               onClick={handleSendPhoneOTP}
               disabled={loading}
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+              className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
             >
               Resend Phone OTP
             </button>
@@ -556,28 +509,41 @@ const Register = () => {
 
   // Render Step 4: Success
   const renderStep4 = () => (
-    <div className="text-center py-8">
-      <div className="mx-auto h-20 w-20 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-emerald-200">
-        <CheckCircleIcon className="h-12 w-12 text-white" />
+    <div className="text-center py-12">
+      <div className="mx-auto h-24 w-24 bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 rounded-full flex items-center justify-center mb-6 shadow-2xl shadow-emerald-300/50 animate-bounce">
+        <CheckCircleIcon className="h-14 w-14 text-white" />
       </div>
-      <h3 className="text-2xl font-bold text-slate-800 mb-2">Registration Successful!</h3>
-      <p className="text-slate-600 mb-4">Your account has been created successfully.</p>
-      <p className="text-sm text-slate-500">Redirecting to dashboard...</p>
+      <h3 className="text-3xl font-bold bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-700 bg-clip-text text-transparent mb-3">
+        Registration Successful!
+      </h3>
+      <p className="text-slate-600 mb-4 text-lg">Your account has been created successfully.</p>
+      <div className="flex items-center justify-center space-x-2 text-sm text-slate-500">
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-400"></div>
+        <p>Redirecting to dashboard...</p>
+      </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl w-full space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="max-w-2xl w-full space-y-8 relative z-10">
+        {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-indigo-200">
-            <KeyIcon className="h-10 w-10 text-white" />
+          <div className="mx-auto h-24 w-24 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-purple-200 animate-float">
+            <SparklesIcon className="h-12 w-12 text-white" />
           </div>
-          <h2 className="mt-6 text-4xl font-extrabold bg-gradient-to-r from-indigo-700 to-violet-700 bg-clip-text text-transparent">
+          <h2 className="mt-8 text-5xl font-extrabold bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 bg-clip-text text-transparent animate-gradient">
             {step === 1 ? 'Create Account' : step === 4 ? 'Success!' : 'Verify Account'}
           </h2>
-          <p className="mt-2 text-sm text-slate-600 font-medium">
-            {step === 1 ? 'Join the placement preparation system' : 
+          <p className="mt-3 text-base text-slate-600 font-medium">
+            {step === 1 ? 'Join our placement preparation platform' : 
              step === 2 ? 'Step 1 of 2: Email Verification' :
              step === 3 ? 'Step 2 of 2: Phone Verification' :
              'Welcome aboard!'}
@@ -586,25 +552,97 @@ const Register = () => {
 
         {/* Progress Steps */}
         {step < 4 && (
-          <div className="flex items-center justify-center space-x-4">
+          <div className="flex items-center justify-center space-x-6 py-4">
             {[1, 2, 3].map((s) => (
               <div key={s} className="flex items-center">
-                <div className={`h-3 w-3 rounded-full ${
-                  s < step ? 'bg-emerald-500' : s === step ? 'bg-indigo-600' : 'bg-slate-300'
+                <div className={`h-4 w-4 rounded-full transition-all duration-300 ${
+                  s < step 
+                    ? 'bg-gradient-to-r from-emerald-400 to-teal-500 shadow-lg shadow-emerald-200 scale-110' 
+                    : s === step 
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-200 scale-125 animate-pulse' 
+                    : 'bg-slate-200'
                 }`} />
-                {s < 3 && <div className={`w-12 h-0.5 ml-1 ${s < step ? 'bg-emerald-500' : 'bg-slate-300'}`} />}
+                {s < 3 && <div className={`w-16 h-1 ml-2 rounded-full transition-all duration-300 ${s < step ? 'bg-gradient-to-r from-emerald-400 to-teal-500' : 'bg-slate-200'}`} />}
               </div>
             ))}
           </div>
         )}
 
-        <div className="bg-white rounded-3xl shadow-2xl shadow-slate-200/50 p-8 border border-slate-100">
+        {/* Main Card */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-purple-200/50 p-8 border border-white/50 relative overflow-hidden">
+          {/* Card Shine Effect */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+          
           {step === 1 && renderStep1()}
           {step === 2 && renderStep2()}
           {step === 3 && renderStep3()}
           {step === 4 && renderStep4()}
         </div>
+
+        {/* Footer */}
+        <div className="text-center">
+          <p className="text-sm text-slate-500">
+            {step === 1 ? (
+              <>
+                Already have an account?{' '}
+                <Link to="/login" className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                  Sign in here →
+                </Link>
+              </>
+            ) : (
+              <Link to="/login" className="text-slate-400 hover:text-slate-600">
+                ← Back to Login
+              </Link>
+            )}
+          </p>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes blob {
+          0%, 100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+        }
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        @keyframes gradient {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 3s ease infinite;
+        }
+      `}</style>
     </div>
   );
 };
