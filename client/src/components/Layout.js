@@ -14,7 +14,8 @@ import {
   Bars3Icon,
   XMarkIcon,
   ClipboardDocumentListIcon,
-  SparklesIcon
+  SparklesIcon,
+  CreditCardIcon
 } from '@heroicons/react/24/outline';
 
 const Layout = () => {
@@ -41,6 +42,7 @@ const Layout = () => {
     { name: 'Companies', href: '/companies', icon: BuildingOfficeIcon, color: 'from-emerald-500 to-teal-500' },
     { name: 'Tests', href: '/tests', icon: ClipboardDocumentListIcon, color: 'from-violet-500 to-purple-500' },
     { name: 'Applications', href: '/applications', icon: DocumentTextIcon, color: 'from-amber-500 to-orange-500' },
+    { name: 'Payment', href: '/payment', icon: CreditCardIcon, color: 'from-indigo-500 to-purple-500' },
     { name: 'Profile', href: '/profile', icon: UserIcon, color: 'from-rose-500 to-pink-500' },
   ];
 
@@ -48,6 +50,7 @@ const Layout = () => {
     { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon, color: 'from-blue-500 to-cyan-500' },
     { name: 'Companies', href: '/admin/companies', icon: BuildingOfficeIcon, color: 'from-emerald-500 to-teal-500' },
     { name: 'Students', href: '/admin/students', icon: UsersIcon, color: 'from-violet-500 to-purple-500' },
+    { name: 'Payments', href: '/admin/payments', icon: CreditCardIcon, color: 'from-indigo-500 to-purple-500' },
     { name: 'Test Creator', href: '/admin/test-creator', icon: ClipboardDocumentListIcon, color: 'from-green-500 to-emerald-500' },
     { name: 'Report Generator', href: '/admin/report-generator', icon: DocumentTextIcon, color: 'from-purple-500 to-indigo-500' },
     { name: 'Branch Manager', href: '/admin/company-branch-manager', icon: AcademicCapIcon, color: 'from-orange-500 to-red-500' },
